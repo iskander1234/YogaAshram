@@ -1,0 +1,27 @@
+﻿@model Employee
+@{
+    ViewBag.Title = "Личный кабинет";
+    Layout = "_Layout";
+}
+
+<div class="container">
+
+     <h5 class="mb-2 mt-2">Добро пожаловать, @Model.UserName!</h5>
+    
+
+</div>
+@section Scripts
+{
+<script>
+            $('#showIndex').click(function() {
+                $('#showIndex').css('display', 'none');
+                $('#dataIndex').show();
+                $('#hideIndex').show();
+            });
+            $('#hideIndex').click(function() {
+                $('#hideIndex').css('display', 'none');
+                $('#dataIndex').hide();
+                $('#showIndex').show();
+            });
+</script>
+}

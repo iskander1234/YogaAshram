@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\csharp\Yoga\YogaAshram\YogaAshram" t="IncludeRecursive">
+      <e p="appsettings.Development.json" t="Include" />
+      <e p="appsettings.json" t="Include" />
+      <e p="bin" t="ExcludeRecursive" />
+      <e p="Controllers" t="Include">
+        <e p="AccountController.cs" t="Include" />
+        <e p="AdminController.cs" t="Include" />
+        <e p="BranchController.cs" t="Include" />
+        <e p="ChiefController.cs" t="Include" />
+        <e p="ClientsController.cs" t="Include" />
+        <e p="CoachesController.cs" t="Include" />
+        <e p="EmployeesController.cs" t="Include" />
+        <e p="GroupController.cs" t="Include" />
+        <e p="ManagerController.cs" t="Include" />
+        <e p="MarketerController.cs" t="Include" />
+        <e p="MembershipController.cs" t="Include" />
+        <e p="PaymentsController.cs" t="Include" />
+        <e p="ScheduleController.cs" t="Include" />
+        <e p="SellerController.cs" t="Include" />
+        <e p="TransactionsController.cs" t="Include" />
+        <e p="ValidationController.cs" t="Include" />
+      </e>
+      <e p="Dockerfile" t="Include" />
+      <e p="Files" t="Include">
+        <e p="contract.pdf" t="Include" />
+      </e>
+      <e p="fonts" t="Include">
+        <e p="arial" t="Include">
+          <e p="arial.ttf" t="Include" />
+          <e p="arialbd.ttf" t="Include" />
+        </e>
+      </e>
+      <e p="Migrations" t="Include">
+        <e p="20201011103122_initial.cs" t="Include" />
+        <e p="20201011103122_initial.Designer.cs" t="Include" />
+        <e p="YogaAshramContextModelSnapshot.cs" t="Include" />
+      </e>
+      <e p="Models" t="Include">
+        <e p="Attendance.cs" t="Include" />
+        <e p="AttendanceCount.cs" t="Include" />
+        <e p="Branch.cs" t="Include" />
+        <e p="CalendarEvent.cs" t="Include" />
+        <e p="Client.cs" t="Include" />
+        <e p="ClientCategory.cs" t="Include" />
+        <e p="ClientsMembership.cs" t="Include" />
+        <e p="CoachSelector.cs" t="Include" />
+        <e p="Comment.cs" t="Include" />
+        <e p="CurrentSum.cs" t="Include" />
+        <e p="Employee.cs" t="Include" />
+        <e p="ErrorViewModel.cs" t="Include" />
+        <e p="Group.cs" t="Include" />
+        <e p="IRepository.cs" t="Include" />
+        <e p="ManagerEmployee.cs" t="Include" />
+        <e p="Membership.cs" t="Include" />
+        <e p="ModelViews" t="Include">
+          <e p="AccountLoginModelView.cs" t="Include" />
+          <e p="AdminIndexModel.cs" t="Include" />
+          <e p="BarChartColumn.cs" t="Include" />
+          <e p="BarChartModelView.cs" t="Include" />
+          <e p="BarChartSelector.cs" t="Include" />
+          <e p="ChangePasswordModelView.cs" t="Include" />
+          <e p="CheckPasswordModelView.cs" t="Include" />
+          <e p="ChiefIndexModelView.cs" t="Include" />
+          <e p="ClientsCreateModelView.cs" t="Include" />
+          <e p="ClientsEditModelView.cs" t="Include" />
+          <e p="ClientTableViewModel.cs" t="Include" />
+          <e p="CoachDetailsModelView.cs" t="Include" />
+          <e p="CoachesIndexModelView.cs" t="Include" />
+          <e p="CreateGroupModelView.cs" t="Include" />
+          <e p="EditOtherEmployeeModelView.cs" t="Include" />
+          <e p="EmployeeCreateModelView.cs" t="Include" />
+          <e p="EmployeeEditModelView.cs" t="Include" />
+          <e p="EmployeesModelView.cs" t="Include" />
+          <e p="ForgotPasswordViewModel.cs" t="Include" />
+          <e p="HelperModels" t="Include">
+            <e p="AttendanceHistoryShow.cs" t="Include" />
+          </e>
+          <e p="LineChartModelView.cs" t="Include" />
+          <e p="ManagerIndexModelView.cs" t="Include" />
+          <e p="MembershipExtendModelView.cs" t="Include" />
+          <e p="MembershipViewModel.cs" t="Include" />
+          <e p="PageViewModel.cs" t="Include" />
+          <e p="PaymentCreateModelView.cs" t="Include" />
+          <e p="PaymentEditModelView.cs" t="Include" />
+          <e p="PaymentsIndexModelView.cs" t="Include" />
+          <e p="ResetPasswordViewModel.cs" t="Include" />
+          <e p="SellerIndexModel.cs" t="Include" />
+          <e p="Transactions" t="Include">
+            <e p="TransactionIndexModel.cs" t="Include" />
+          </e>
+          <e p="TrialCheckModel.cs" t="Include" />
+        </e>
+        <e p="Payment.cs" t="Include" />
+        <e p="PaymentSelector.cs" t="Include" />
+        <e p="Role.cs" t="Include" />
+        <e p="Schedule.cs" t="Include" />
+        <e p="Sickness.cs" t="Include" />
+        <e p="TrialUsers.cs" t="Include" />
+        <e p="Withdrawal.cs" t="Include" />
+        <e p="YogaAshramContext.cs" t="Include" />
+      </e>
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="netcoreapp3.1" t="Include">
+            <e p="yogaAshram.AssemblyInfo.cs" t="Include" />
+            <e p="yogaAshram.RazorAssemblyInfo.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Program.cs" t="Include" />
+      <e p="Properties" t="Include">
+        <e p="launchSettings.json" t="Include" />
+      </e>
+      <e p="Quartz" t="Include">
+        <e p="DataJob.cs" t="Include" />
+        <e p="DataScheduler.cs" t="Include" />
+        <e p="JobFactory.cs" t="Include" />
+      </e>
+      <e p="Services" t="Include">
+        <e p="ClientServices.cs" t="Include" />
+        <e p="ContractPdfService.cs" t="Include" />
+        <e p="EmailService.cs" t="Include" />
+        <e p="GetEnumDescription.cs" t="Include" />
+        <e p="GetUserId.cs" t="Include" />
+        <e p="ModalPopupRender" t="Include">
+          <e p="Helper.cs" t="Include" />
+        </e>
+        <e p="PasswordGenerator.cs" t="Include" />
+        <e p="PaymentsService.cs" t="Include" />
+        <e p="RoleInitializer.cs" t="Include" />
+        <e p="TelegramBot" t="Include">
+          <e p="Bot.cs" t="Include" />
+          <e p="IBot.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Startup.cs" t="Include" />
+      <e p="TagHelpers" t="Include">
+        <e p="CalendarTagHelper.cs" t="Include" />
+      </e>
+      <e p="Views" t="Include">
+        <e p="_ViewImports.cshtml" t="Include" />
+        <e p="_ViewStart.cshtml" t="Include" />
+        <e p="Account" t="Include">
+          <e p="ForgotPassword.cshtml" t="Include" />
+          <e p="ForgotPasswordConfirmation.cshtml" t="Include" />
+          <e p="Login.cshtml" t="Include" />
+          <e p="ResetPassword.cshtml" t="Include" />
+          <e p="ResetPasswordConfirmation.cshtml" t="Include" />
+        </e>
+        <e p="Admin" t="Include">
+          <e p="Index.cshtml" t="Include" />
+          <e p="Scheduele.cshtml" t="Include" />
+        </e>
+        <e p="Chief" t="Include">
+          <e p="Index.cshtml" t="Include" />
+          <e p="PartialViews" t="Include">
+            <e p="CheckPasswordPartial.cshtml" t="Include" />
+          </e>
+        </e>
+        <e p="Clients" t="Include">
+          <e p="AttendanceHistory.cshtml" t="Include" />
+          <e p="CheckAttendanceTrial.cshtml" t="Include" />
+          <e p="ClientEdit.cshtml" t="Include" />
+          <e p="ClientInfo.cshtml" t="Include" />
+          <e p="ClientСabinet.cshtml" t="Include" />
+          <e p="CreateClients.cshtml" t="Include" />
+          <e p="Index.cshtml" t="Include" />
+          <e p="PartialView" t="Include">
+            <e p="ClientTableMenmership.cshtml" t="Include" />
+          </e>
+          <e p="RegularClients.cshtml" t="Include" />
+          <e p="Trials.cshtml" t="Include" />
+        </e>
+        <e p="Coaches" t="Include">
+          <e p="Details.cshtml" t="Include" />
+          <e p="Index.cshtml" t="Include" />
+        </e>
+        <e p="Employees" t="Include">
+          <e p="Delete.cshtml" t="Include" />
+          <e p="Edit.cshtml" t="Include" />
+          <e p="Index.cshtml" t="Include" />
+          <e p="ListEmployee.cshtml" t="Include" />
+          <e p="PartialView.cshtml" t="Include" />
+          <e p="PartialViewManager.cshtml" t="Include" />
+          <e p="PartialViews" t="Include">
+            <e p="ChangePasswordPartial.cshtml" t="Include" />
+            <e p="CreateCoachPartial.cshtml" t="Include" />
+            <e p="CreatePartial.cshtml" t="Include" />
+            <e p="EmployeeEditPartial.cshtml" t="Include" />
+            <e p="GetModalScripts.cshtml" t="Include" />
+          </e>
+          <e p="RedirectToChoose.cshtml" t="Include" />
+        </e>
+        <e p="Group" t="Include">
+          <e p="CreateGroup.cshtml" t="Include" />
+          <e p="History.cshtml" t="Include" />
+        </e>
+        <e p="Manager" t="Include">
+          <e p="Index.cshtml" t="Include" />
+        </e>
+        <e p="Marketer" t="Include">
+          <e p="Details.cshtml" t="Include" />
+        </e>
+        <e p="Membership" t="Include">
+          <e p="_ViewAll.cshtml" t="Include" />
+          <e p="AddOrEdit.cshtml" t="Include" />
+          <e p="BuyMembership.cshtml" t="Include" />
+          <e p="Index.cshtml" t="Include" />
+          <e p="MembershipExtension.cshtml" t="Include" />
+          <e p="PartialViews" t="Include">
+            <e p="ExtendModalPartial.cshtml" t="Include" />
+            <e p="GetExtendModalScripts.cshtml" t="Include" />
+          </e>
+        </e>
+        <e p="Payments" t="Include">
+          <e p="Index.cshtml" t="Include" />
+          <e p="PartialViews" t="Include">
+            <e p="BarChartPartial.cshtml" t="Include" />
+            <e p="CreatePartial.cshtml" t="Include" />
+            <e p="EditPartial.cshtml" t="Include" />
+            <e p="GetModalScripts.cshtml" t="Include" />
+            <e p="PaymentsSumChart.cshtml" t="Include" />
+          </e>
+        </e>
+        <e p="Schedule" t="Include">
+          <e p="Group.cshtml" t="Include" />
+          <e p="Index.cshtml" t="Include" />
+          <e p="PartialViews" t="Include">
+            <e p="_AttendanceCheckPartial.cshtml" t="Include" />
+            <e p="_CreateClientPartial.cshtml" t="Include" />
+            <e p="_GroupInfoPartialView.cshtml" t="Include" />
+          </e>
+        </e>
+        <e p="Seller" t="Include">
+          <e p="Index.cshtml" t="Include" />
+        </e>
+        <e p="Shared" t="Include">
+          <e p="_Layout.cshtml" t="Include" />
+          <e p="_ValidationScriptsPartial.cshtml" t="Include" />
+          <e p="Error.cshtml" t="Include" />
+          <e p="PartialView" t="Include">
+            <e p="_BranchCreatePartial.cshtml" t="Include" />
+            <e p="WebsiteBar.cshtml" t="Include" />
+          </e>
+        </e>
+        <e p="Transactions" t="Include">
+          <e p="Index.cshtml" t="Include" />
+          <e p="Withdraw.cshtml" t="Include" />
+        </e>
+      </e>
+      <e p="wwwroot" t="Include">
+        <e p="css" t="Include">
+          <e p="Chart.min.css" t="Include" />
+          <e p="cleanslate.css" t="Include" />
+          <e p="jquery.weekLine.css" t="Include" />
+          <e p="site.css" t="Include" />
+        </e>
+        <e p="favicon.ico" t="Include" />
+        <e p="Images" t="Include">
+          <e p="SiteImages" t="Include">
+            <e p="ashram.png" t="Include" />
+            <e p="comment.png" t="Include" />
+            <e p="edit.png" t="Include" />
+            <e p="out.jpg" t="Include" />
+            <e p="profile.png" t="Include" />
+            <e p="yoga.png" t="Include" />
+          </e>
+        </e>
+        <e p="js" t="Include">
+          <e p="Chart.min.js" t="Include" />
+          <e p="jquery.weekLine.min.js" t="Include" />
+          <e p="site.js" t="Include" />
+        </e>
+        <e p="lib" t="Include">
+          <e p="bootstrap" t="Include">
+            <e p="dist" t="Include">
+              <e p="css" t="Include">
+                <e p="bootstrap-grid.css" t="Include" />
+                <e p="bootstrap-grid.css.map" t="Include" />
+                <e p="bootstrap-grid.min.css" t="Include" />
+                <e p="bootstrap-grid.min.css.map" t="Include" />
+                <e p="bootstrap-reboot.css" t="Include" />
+                <e p="bootstrap-reboot.css.map" t="Include" />
+                <e p="bootstrap-reboot.min.css" t="Include" />
+                <e p="bootstrap-reboot.min.css.map" t="Include" />
+                <e p="bootstrap.css" t="Include" />
+                <e p="bootstrap.css.map" t="Include" />
+                <e p="bootstrap.min.css" t="Include" />
+                <e p="bootstrap.min.css.map" t="Include" />
+              </e>
+              <e p="js" t="Include">
+                <e p="bootstrap.bundle.js" t="Include" />
+                <e p="bootstrap.bundle.js.map" t="Include" />
+                <e p="bootstrap.bundle.min.js" t="Include" />
+                <e p="bootstrap.bundle.min.js.map" t="Include" />
+                <e p="bootstrap.js" t="Include" />
+                <e p="bootstrap.js.map" t="Include" />
+                <e p="bootstrap.min.js" t="Include" />
+                <e p="bootstrap.min.js.map" t="Include" />
+              </e>
+            </e>
+            <e p="LICENSE" t="Include" />
+          </e>
+          <e p="bootstrap-datepicker-1.9.0-dist" t="Include">
+            <e p="css" t="Include">
+              <e p="bootstrap-datepicker.css" t="Include" />
+              <e p="bootstrap-datepicker.css.map" t="Include" />
+              <e p="bootstrap-datepicker.min.css" t="Include" />
+              <e p="bootstrap-datepicker.standalone.css" t="Include" />
+              <e p="bootstrap-datepicker.standalone.css.map" t="Include" />
+              <e p="bootstrap-datepicker.standalone.min.css" t="Include" />
+              <e p="bootstrap-datepicker3.css" t="Include" />
+              <e p="bootstrap-datepicker3.css.map" t="Include" />
+              <e p="bootstrap-datepicker3.min.css" t="Include" />
+              <e p="bootstrap-datepicker3.standalone.css" t="Include" />
+              <e p="bootstrap-datepicker3.standalone.css.map" t="Include" />
+              <e p="bootstrap-datepicker3.standalone.min.css" t="Include" />
+            </e>
+            <e p="js" t="Include">
+              <e p="bootstrap-datepicker.js" t="Include" />
+              <e p="bootstrap-datepicker.min.js" t="Include" />
+            </e>
+            <e p="locales" t="Include">
+              <e p="bootstrap-datepicker-en-CA.min.js" t="Include" />
+              <e p="bootstrap-datepicker.ar-tn.min.js" t="Include" />
+              <e p="bootstrap-datepicker.ar.min.js" t="Include" />
+              <e p="bootstrap-datepicker.az.min.js" t="Include" />
+              <e p="bootstrap-datepicker.bg.min.js" t="Include" />
+              <e p="bootstrap-datepicker.bm.min.js" t="Include" />
+              <e p="bootstrap-datepicker.bn.min.js" t="Include" />
+              <e p="bootstrap-datepicker.br.min.js" t="Include" />
+              <e p="bootstrap-datepicker.bs.min.js" t="Include" />
+              <e p="bootstrap-datepicker.ca.min.js" t="Include" />
+              <e p="bootstrap-datepicker.cs.min.js" t="Include" />
+              <e p="bootstrap-datepicker.cy.min.js" t="Include" />
+              <e p="bootstrap-datepicker.da.min.js" t="Include" />
+              <e p="bootstrap-datepicker.de.min.js" t="Include" />
+              <e p="bootstrap-datepicker.el.min.js" t="Include" />
+              <e p="bootstrap-datepicker.en-AU.min.js" t="Include" />
+              <e p="bootstrap-datepicker.en-CA.min.js" t="Include" />
+              <e p="bootstrap-datepicker.en-GB.min.js" t="Include" />
+              <e p="bootstrap-datepicker.en-IE.min.js" t="Include" />
+              <e p="bootstrap-datepicker.en-NZ.min.js" t="Include" />
+              <e p="bootstrap-datepicker.en-ZA.min.js" t="Include" />
+              <e p="bootstrap-datepicker.eo.min.js" t="Include" />
+              <e p="bootstrap-datepicker.es.min.js" t="Include" />
+              <e p="bootstrap-datepicker.et.min.js" t="Include" />
+              <e p="bootstrap-datepicker.eu.min.js" t="Include" />
+              <e p="bootstrap-datepicker.fa.min.js" t="Include" />
+              <e p="bootstrap-datepicker.fi.min.js" t="Include" />
+              <e p="bootstrap-datepicker.fo.min.js" t="Include" />
+              <e p="bootstrap-datepicker.fr-CH.min.js" t="Include" />
+              <e p="bootstrap-datepicker.fr.min.js" t="Include" />
+              <e p="bootstrap-datepicker.gl.min.js" t="Include" />
+              <e p="bootstrap-datepicker.he.min.js" t="Include" />
+              <e p="bootstrap-datepicker.hi.min.js" t="Include" />
+              <e p="bootstrap-datepicker.hr.min.js" t="Include" />
+              <e p="bootstrap-datepicker.hu.min.js" t="Include" />
+              <e p="bootstrap-datepicker.hy.min.js" t="Include" />
+              <e p="bootstrap-datepicker.id.min.js" t="Include" />
+              <e p="bootstrap-datepicker.is.min.js" t="Include" />
+              <e p="bootstrap-datepicker.it-CH.min.js" t="Include" />
+              <e p="bootstrap-datepicker.it.min.js" t="Include" />
+              <e p="bootstrap-datepicker.ja.min.js" t="Include" />
+              <e p="bootstrap-datepicker.ka.min.js" t="Include" />
+              <e p="bootstrap-datepicker.kh.min.js" t="Include" />
+              <e p="bootstrap-datepicker.kk.min.js" t="Include" />
+              <e p="bootstrap-datepicker.km.min.js" t="Include" />
+              <e p="bootstrap-datepicker.ko.min.js" t="Include" />
+              <e p="bootstrap-datepicker.kr.min.js" t="Include" />
+              <e p="bootstrap-datepicker.lt.min.js" t="Include" />
+              <e p="bootstrap-datepicker.lv.min.js" t="Include" />
+              <e p="bootstrap-datepicker.me.min.js" t="Include" />
+              <e p="bootstrap-datepicker.mk.min.js" t="Include" />
+              <e p="bootstrap-datepicker.mn.min.js" t="Include" />
+              <e p="bootstrap-datepicker.ms.min.js" t="Include" />
+              <e p="bootstrap-datepicker.nl-BE.min.js" t="Include" />
+              <e p="bootstrap-datepicker.nl.min.js" t="Include" />
+              <e p="bootstrap-datepicker.no.min.js" t="Include" />
+              <e p="bootstrap-datepicker.oc.min.js" t="Include" />
+              <e p="bootstrap-datepicker.pl.min.js" t="Include" />
+              <e p="bootstrap-datepicker.pt-BR.min.js" t="Include" />
+              <e p="bootstrap-datepicker.pt.min.js" t="Include" />
+              <e p="bootstrap-datepicker.ro.min.js" t="Include" />
+              <e p="bootstrap-datepicker.rs-latin.min.js" t="Include" />
+              <e p="bootstrap-datepicker.rs.min.js" t="Include" />
+              <e p="bootstrap-datepicker.ru.min.js" t="Include" />
+              <e p="bootstrap-datepicker.si.min.js" t="Include" />
+              <e p="bootstrap-datepicker.sk.min.js" t="Include" />
+              <e p="bootstrap-datepicker.sl.min.js" t="Include" />
+              <e p="bootstrap-datepicker.sq.min.js" t="Include" />
+              <e p="bootstrap-datepicker.sr-latin.min.js" t="Include" />
+              <e p="bootstrap-datepicker.sr.min.js" t="Include" />
+              <e p="bootstrap-datepicker.sv.min.js" t="Include" />
+              <e p="bootstrap-datepicker.sw.min.js" t="Include" />
+              <e p="bootstrap-datepicker.ta.min.js" t="Include" />
+              <e p="bootstrap-datepicker.tg.min.js" t="Include" />
+              <e p="bootstrap-datepicker.th.min.js" t="Include" />
+              <e p="bootstrap-datepicker.tk.min.js" t="Include" />
+              <e p="bootstrap-datepicker.tr.min.js" t="Include" />
+              <e p="bootstrap-datepicker.uk.min.js" t="Include" />
+              <e p="bootstrap-datepicker.uz-cyrl.min.js" t="Include" />
+              <e p="bootstrap-datepicker.uz-latn.min.js" t="Include" />
+              <e p="bootstrap-datepicker.vi.min.js" t="Include" />
+              <e p="bootstrap-datepicker.zh-CN.min.js" t="Include" />
+              <e p="bootstrap-datepicker.zh-TW.min.js" t="Include" />
+            </e>
+          </e>
+          <e p="jquery" t="Include">
+            <e p="dist" t="Include">
+              <e p="jquery.js" t="Include" />
+              <e p="jquery.min.js" t="Include" />
+              <e p="jquery.min.map" t="Include" />
+            </e>
+            <e p="LICENSE.txt" t="Include" />
+          </e>
+          <e p="jquery-validation" t="Include">
+            <e p="dist" t="Include">
+              <e p="additional-methods.js" t="Include" />
+              <e p="additional-methods.min.js" t="Include" />
+              <e p="jquery.validate.js" t="Include" />
+              <e p="jquery.validate.min.js" t="Include" />
+            </e>
+            <e p="LICENSE.md" t="Include" />
+          </e>
+          <e p="jquery-validation-unobtrusive" t="Include">
+            <e p="jquery.validate.unobtrusive.js" t="Include" />
+            <e p="jquery.validate.unobtrusive.min.js" t="Include" />
+            <e p="LICENSE.txt" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="yogaAshram.csproj" t="IncludeRecursive" />
+    </e>
+    <e p="C:\Users\user\.Rider2019.3\config\consoles\db" t="IncludeRecursive" />
+    <e p="C:\Users\user\.Rider2019.3\config\extensions" t="IncludeRecursive" />
+    <e p="C:\Users\user\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\user\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_.19.00" t="ExcludeRecursive" />
+  </component>
+</project>

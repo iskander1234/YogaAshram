@@ -1,0 +1,162 @@
+﻿@model Schedule
+
+<div>
+
+	<H5 class="text-center">Посещаемость клиентов</H5>
+        	<p>Статус: <span id="log" class="text-danger"></span></p>
+		<table class="table" id="absTimes">
+			<thead>
+			<tr>
+				<th scope="col">Клиент</th>
+				<th scope="col">Количество пропусков</th>
+				<th scope="col">Осталось заморозок</th>
+				<th>Проверено</th>
+				<th>Абонемент</th>
+				<th>Осталось дней</th>
+				<th scope="col">Посещение</th>
+				<th scope="col">Подтверждение</th>
+				<th>Комментарии</th>
+			</tr>
+			</thead>
+			<tbody>
+        
+			@foreach (Attendance attendance in  @Model.Attendances)
+			{
+        			
+				<tr>
+					<th scope="row" id="clientName-@attendance.Id">@attendance.Client.NameSurname</th>
+					<td>
+						<div id="absTimes-@attendance.Id">
+							@attendance.AttendanceCount.AbsenceTimes
+						</div>
+					</td>
+					<td>
+                    @attendance.AttendanceCount.FrozenTimes
+                    </td>
+					<td>
+						<div id="checkToReload-@attendance.Id">
+							@if (@attendance.IsChecked)
+							{
+								<p>Проверено</p>
+							}
+							else
+							{
+								<p>Не проверено</p>
+							}
+						</div>
+					</td>
+					<td>@attendance.Membership.Name</td>
+					
+						@if(@attendance.AttendanceCount.AttendingTimes < 3 && @attendance.AttendanceCount.AttendingTimes > 1)
+						{ 
+						<div >
+							<td class="bg-warning">													        
+								@attendance.AttendanceCount.AttendingTimes							
+							</td>
+							</div>
+						}
+						else if (@attendance.AttendanceCount.AttendingTimes == 1)
+						{
+						<div >	
+							<td class="bg-danger">										        
+								@attendance.AttendanceCount.AttendingTimes														        
+							</td> 
+							</div>	
+						}
+						else if (@attendance.AttendanceCount.AttendingTimes == 0 && @attendance.IsNotActive == false)
+                        {
+	                        <div>	
+		                        <td class="bg-danger">										        
+			                        <a class="btn btn-primary" asp-action="MembershipExtension" asp-controller="Membership" asp-route-clientId="@attendance.ClientId" asp-route-date="@attendance.ClientsMembership.DateOfExpiry">Продлить абонемент</a>														        
+		                        </td> 
+	                        </div>
+                        }
+						else
+						{
+							<div>
+								<td>														        
+									@attendance.AttendanceCount.AttendingTimes													        
+								</td> 
+							</div>
+						}
+					
+					<td>
+						<input type="hidden" name="attendanceId" value="@attendance.Id" id="inputAttendance-@attendance.Id">
+						<input type="hidden" name="attendanceId" value="@attendance.ClientId" id="inputClientId-@attendance.Id">
+        						
+						<select name="state" id="cameOrNot-@attendance.Id" class="form-control" onchange="attendAndComment('@attendance.Id')">
+							<option value="1">Пришел</option>
+							<option value="2">Не пришел</option>
+							<option value="3">Заморозка</option>
+							<option value="5">Отмена/Выходной</option>
+						</select>
+					</td>
+					<td>
+						<button onclick="checkRegularAttendance('@attendance.Id')" class="btn btn-primary">Отметить</button>        
+					</td> 
+					<td>
+						<div class="row">
+							<div id="commentSection-@attendance.Id">
+								@if (@attendance.Client.Comments != null)
+								{								       
+									@foreach (Comment comment in @attendance.Client.Comments)
+									{
+										<p class="small">@comment.Text</p>
+									}
+								}
+							</div>
+							<div>
+								<a href="#" data-toggle="modal" data-target="#comment-@attendance.Id">
+								<img src="/Images/SiteImages/comment.png" alt="comment" class="commentIcon">
+								</a>
+							</div>
+						</div>
+					</td>
+				</tr>
+				<div class="modal fade" id="comment-@attendance.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLongTitle">Добавить комментарий</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+							<input type="hidden" value="@attendance.ClientId" id="attendanceCountId-@attendance.Id">
+								<textarea type="text" class="form-control" id="commentInput-@attendance.Id"></textarea>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="sendComment('@attendance.Id')">Отправить</button>
+								<button type="button" class="btn btn-primary" data-dismiss="modal">Закрыть</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal fade" id="attendAndComment-@attendance.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLongTitle">Причина</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<textarea type="text" class="form-control" id="commentAndAttendInput-@attendance.Id"></textarea>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-outline-secondary" data-dismiss="modal" onclick="regularAttendAndComment('@attendance.Id')">Отметить</button>
+								<button type="button" class="btn btn-outline-dark" data-dismiss="modal">Закрыть</button>
+							</div>
+						</div>
+					</div>
+				</div>	
+				
+			}
+			</tbody>
+		</table>
+		
+	
+	</div>
+	<p class="text-hide" id="dateForAttendance">@ViewBag.Date</p>	

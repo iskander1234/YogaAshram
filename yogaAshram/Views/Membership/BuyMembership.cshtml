@@ -1,0 +1,123 @@
+﻿@model Client
+@{ 
+    ViewBag.Title = "добавить в группу"; 
+    Layout = "_Layout"; 
+}
+
+ <h4>Добавить в группу</h4> 
+<hr />
+ <div class="row"> 
+     <div class="col-md-8"> 
+       <form method="post" > 
+          
+           <div class="form-group"> 
+                <label  class="control-label">Клиент</label> 
+               <input name="clientName"  value="@Model.NameSurname"  disabled="disabled" class="form-control" > 
+             <input name="clientId"  value="@Model.Id"  type="hidden" class="form-control" > 
+             </div> 
+           <div class="form-group"> 
+                 <label  class="control-label">Выберите группу:</label>
+               
+               <select class="form-control" id="groupSelect" name="GroupId">
+                   @foreach (var schedule in ViewBag.Schedules)
+                   {
+                       <option value='{"group":"@schedule.GroupId", "days":@{ string result = String.Join(",", @schedule.DayOfWeeksString);}"@result"}'>@schedule.Group.Name</option>
+                   }
+               </select>
+                                
+           </div> 
+           <div class="form-group"> 
+               <label  class="control-label">Выберите абонемент:</label> 
+                                           
+               <select name="MembershipId" id="membershipSelect" class="form-control">
+                   @foreach (Membership membership in  @ViewBag.Memberships)
+                   {
+                       <option value="@membership.Id">@membership.Name</option>
+                   }
+                               
+               </select>          
+                                           
+           </div>
+           <div class="form-group">
+               <label class="control-label">Дата первого занятия:</label>
+               <input type="text" id="datepicker" name="FirstDay" class="form-control" autocomplete="off" required>
+           </div>
+           
+           
+           <div class="form-group"> 
+                <input id="submitCreate" type="submit" value="Создать" class="btn btn-secondary" /> 
+            </div> 
+        </form> 
+    </div> 
+ </div> 
+
+ <div> 
+</div> 
+@section Scripts
+{
+    <script>
+        $('#submitCreate').on('click', function () {
+           
+            
+         if ($('#datepicker').val() === ''){
+                $('#errorText').text('Выберите дату');
+            }
+            else {
+                const optionValueGroup = $('#groupSelect').val();                         	  
+                let objGroup = $.parseJSON(optionValueGroup);
+             
+                const optionValueMembership = $('#membershipSelect').val();
+                const objMembership = $.parseJSON(optionValueMembership);
+                   console.log(objGroup);
+                $.ajax({
+                    url: '@Url.Action("BuyMembership", "Membership")',
+                    type: "POST",
+                    datatype: "json",
+                    data: {
+                      
+                        "clientId": @Model.Id,
+                        "MembershipId": objMembership,
+                        "GroupId": objGroup.group,
+                        "FirstDay": $('#datepicker').val()
+                    }
+                   
+                })
+            }
+        })
+    </script>
+    <script >
+    function showHideOptions(){
+            const optionValue = $('#groupSelect').val();                         	  
+            var obj = $.parseJSON(optionValue);
+            var daysArray = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+            var daysSelected = obj.days.split(",");
+            let indexes = daysSelected.map(function(word) { return daysArray.indexOf(word); })
+            let disabledDays = daysArray.filter( function( el ) {return daysSelected.indexOf( el ) < 0;});
+            let disabledIndexes = disabledDays.map(function(word) { return daysArray.indexOf(word); });
+            var today = new Date();
+           
+            let date = today;
+            $('#datepicker').datepicker({
+                language: "ru",
+                startDate: date,
+                format: "dd.mm.yyyy",
+                weekStart: 1,
+                todayHighlight: true,
+                daysOfWeekDisabled: disabledIndexes,
+                daysOfWeekHighlighted: indexes
+            });
+    }
+    $(document).ready(function() {
+       showHideOptions();
+    $('#groupSelect').on('change',function(){
+        $('#datepicker').datepicker('destroy');
+        $('#datepicker').val('');
+       showHideOptions();
+       });
+     });
+    
+    </script>
+ 
+    
+    
+}

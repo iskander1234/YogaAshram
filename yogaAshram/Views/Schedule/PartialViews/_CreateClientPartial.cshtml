@@ -1,0 +1,98 @@
+﻿@using Microsoft.CodeAnalysis
+@model Schedule
+
+
+<div class="row">
+	<div class="col-sm-6">
+		<label class="form-control">
+			<strong>Группа:</strong> @Model.Group.Name</label>
+	</div>
+	<div class="col-sm-6">
+		<label class="form-control">
+			<strong>Дата первого занятия:</strong> @Model.ChosenDate.ToString("D")</label>
+	</div>
+</div>
+
+<input type="hidden" class="form-control mb-4 w-50" value="@Model.GroupId" asp-for="@Model.ClientsCreateModelView.GroupId">
+<input type="hidden" asp-for="@Model.ClientsCreateModelView.StartDate" value="@Model.ChosenDate">
+<div class="row">
+	<div class="col-sm-6">
+		<label>Ф.И.О</label><br/>
+		<span asp-validation-for="@Model.NameSurname"></span>
+		<input class="form-control mb-4" asp-for="@Model.NameSurname" placeholder="Ф.И.О"/>
+	</div>
+	<div class="col-sm-6">
+		<label >Дата рождения</label><br/>
+		<span class="text-danger" id="errorDateOfBirth"></span>
+		<input type="date"
+		       value="1900-02-02"
+		       min="1900-01-01" max="2015-12-31" class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.DateOfBirth">
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<label>Номер телефона</label><br/>
+		<span asp-validation-for="@Model.PhoneNumber"></span>
+		<input class="form-control mb-4" id="phone-mask2" asp-for="@Model.PhoneNumber" placeholder="8777777777"/>
+	</div>
+
+	<div class="col-sm-6">
+		<label>Электронная почта</label><br/>
+		<span asp-validation-for="@Model.ClientsCreateModelView.Email"></span>
+		<input class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.Email" placeholder="Еmаil"/>
+
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-6">
+		<label>Откуда вы о нас узнали?</label><br/>
+		<select class="form-control mb-4" asp-for="ClientsCreateModelView.Source">
+			<option value="">...</option>
+			<option value="Инстаграм страница">Инстаграм страница</option>
+			<option value="Таргет в инстаграмме">Таргет в инстаграмме</option>
+			<option value="Инстаграм страница">Инстаграм страница</option>
+			<option value="Вывеска">Вывеска</option>
+			<option value="По рекомендации">По рекомендации</option>
+			<option value="По брошюре">По брошюре</option>
+			<option value="2ГИС">2ГИС</option>
+			<option value="1Fit">1Fit</option>
+			<option value="Гугл реклама">Гугл реклама</option>
+			<option value="Яндекс реклама">Яндекс реклама </option>
+			<option value="Другое">Другое</option>
+		</select>
+		<span asp-validation-for="@Model.ClientsCreateModelView.Source"></span>
+	</div>
+	<div class="col-sm-6">
+		<label>Наличие заболеваний</label>
+		<select class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.SicknessId">
+			@foreach (Sickness sickness in  @ViewBag.Sicknesses)
+			{
+				<option value="@sickness.Id">
+					@sickness.Name
+				</option>
+			}
+		</select>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<label>Место работы</label><br/>
+		<textarea class="form-control mb-4" rows="2" asp-for="@Model.ClientsCreateModelView.WorkPlace" placeholder="Место работы"></textarea>
+	</div>
+
+	<div class="col-sm-6">
+		<label>Комментарии</label><br/>
+		<span asp-validation-for="@Model.ClientsCreateModelView.Comment"></span>
+
+		<textarea class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.Comment" rows="2" placeholder="Комментарии"></textArea>
+	</div>
+</div>   
+<br/>
+
+@{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	
+	
+}
+

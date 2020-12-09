@@ -1,0 +1,56 @@
+﻿
+@model PaymentEditModelView
+<!-- Modal -->
+<div class="modal fade" id="paymentEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Редактировать платеж</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Комментарий</label>
+                    <input value="@Model.Comment" id="commentPaymentEdit" type="text" class="form-control">
+                    <p id="invalidCommentEdit" class="text-danger"></p>
+                </div>
+                <div class="form-group">
+                    <label>Оплата налом</label>
+                    <input value="@Model.CashSum." id="cashSumEdit" type="text" class="form-control">
+                    <p id="invalidCashSumEdit" class="text-danger"></p>
+                </div>
+                <div class="form-group">
+                    <label>Безнал</label>
+                    <input value="@Model.CardSum" id="cardSumEdit" type="text" class="form-control">
+                    <p id="invalidCardSumEdit" class="text-danger"></p>
+                </div>
+            </div>          
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-dismiss="modal">Закрыть</button>
+                <button id="submitPaymentEdit" type="button" class="btn btn-secondary">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#submitPaymentEdit').on('click', function () {
+        $.ajax({
+            url: '@Url.Action("EditAjax", "Payments")',
+            type: "POST",
+            datatype: "json",
+            data: {
+                "Comment": $("#commentPaymentEdit").val(),
+                "PaymentId": @Model.PaymentId,
+                "CardSum": $('#cardSumEdit').val(),
+                "CashSum": $('#cashSumEdit').val()
+            },
+            success: function (data) {
+                if (data) {
+                    document.location.reload();
+                }
+            }
+        })
+    })
+</script>

@@ -1,0 +1,85 @@
+﻿@model yogaAshram.Models.ModelViews.Transactions.TransactionIndexModel
+
+
+@{
+    ViewBag.Title = "Касса";
+    Layout = "_Layout";
+}
+
+<form method="get">
+    <div class="form-inline form-group">
+        <label class="p-2 font-weight-bold"> Месяц </label>
+          <input  value="@ViewBag.BranchId" name="branchId"  hidden="hidden" />
+        <input type="date" id="start" name="start"
+                value="@DateTime.Now" class="form-control mb-2 mr-sm-2"> 
+      
+       
+        <input type="submit" value="Поиск" class="btn btn-secondary mb-2" />
+    </div>
+</form>
+
+
+
+<div class="container">
+    <h4>Касса филиала @Model.CurrentSum.Branch.Name</h4> 
+    <p>На кассе @Model.CurrentSum.Total тг</p>
+    <p>Налл @Model.CurrentSum.CashSum тг</p>
+    <p>Безналл @Model.CurrentSum.CreditSum тг</p>
+    @if (User.IsInRole("chief"))
+    {
+        <a class="btn btn-secondary mb-4 mt-2" type="button" asp-action="Withdraw" asp-controller="Transactions" asp-route-branchId="@Model.BranchId">Снять деньги</a> 
+    }
+    <br/>
+    <div class="row">
+        <div class="col-6">
+            <table class="table-bordered table">
+                <tr>
+                    <th>Пополнение</th>
+                    <th>Сумма</th>
+                     <th>Время</th>
+                </tr>
+                @foreach (var p in @Model.Payments)
+                {
+                    <tr>
+                     <td> @p.ClientsMembership.Client.NameSurname<br/> @p.ClientsMembership.Membership.Name</td>
+                   
+                        <td> @p.TotalSum</td>
+                        <td> @p.ClientsMembership.DateOfPurchase</td>
+
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="col-6">
+            <table class="table-bordered table">
+                <tr>
+                    <th>Снятие</th>
+                    <th>Сумма</th>
+                    <th>Время</th>
+                </tr>
+                @foreach (var p in @Model.Withdrawals)
+                {
+                    <tr>
+                        <td> @p.Sum</td>
+                        <td> @if (@p.IsCash == true)
+                             {
+                                 <span>Снятие наличных средств </span>@p.Creator.NameSurname
+                             }
+                             else
+                             {
+                                 <span>Снятие с карты </span>@p.Creator.NameSurname
+                             }
+                        </td>
+                          <td> @p.Date</td>
+
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+

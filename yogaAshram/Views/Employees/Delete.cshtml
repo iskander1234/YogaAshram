@@ -1,0 +1,20 @@
+﻿
+@model Employee
+@{
+    ViewBag.Title = "Подтвердите свои действия";
+}
+<div class="card text-center" style="width:500px; margin:auto;">
+    <div class="card-header">
+        Подтвердите свои действия
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Удаление сотрудника</h5>
+        <p class="card-text">Вы точно хотите удалить работника @Model.NameSurname</p>
+        <div class="d-flex flex-row" style="margin-left: 180px;">
+            <form asp-action="Delete" asp-route-emplId="@Model.Id" method="post">
+                <button type="submit" class="btn btn-danger">Да</button>
+            </form>
+            <a asp-action="Index" class="btn btn-success ml-1">Нет</a>
+        </div>
+    </div>
+</div>

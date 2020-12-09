@@ -1,0 +1,21 @@
+﻿
+@model List<Employee>
+
+<div class="container mt-1">
+    @if (@ViewBag.Error == null)
+    {
+        @foreach (var employee in @Model)
+            {
+                <p class="text-center">@employee.NameSurname 
+    <a asp-action="Delete" asp-controller="Employees" asp-route-emplId="@employee.Id">
+                    Удалить
+                    </a>
+                    <a asp-action="Edit" asp-controller="Employees" asp-route-emplId="@employee.Id">Изменить</a></p>
+            }
+    }
+    else
+    {
+       <p class="text-center text-danger">@ViewBag.Error</p> 
+    }
+    
+</div>

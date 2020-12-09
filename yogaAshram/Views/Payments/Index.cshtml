@@ -1,0 +1,387 @@
+﻿
+@model PaymentsIndexModelView
+@{
+    ViewBag.Title = "Список платежей";
+}
+<link rel="stylesheet" href="~/css/Chart.min.css">
+<style>
+    .tabsPayments {
+        margin-top: 30px;
+        margin-left: 5px;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .tabPayments {
+        cursor: pointer;
+        font-size: 13px;
+        padding: 2px 2px;
+        background: #f7f7f7;
+        border-radius: 10px 10px 0 0;
+        border-style: solid solid none;
+        border-width: 1px;
+        border-color: #dee2e6;
+        margin-right: 3px;
+    }
+
+    .tabActive {
+        background: #c1c1c1;
+    }
+
+    .tabPayments:hover {
+        background: #c1c1c1;
+    }
+</style>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" />
+<div class="tabsPayments">
+    <div id="paymentTableTab" class="tabActive tabPayments">Таблица платежей</div>
+    @if (User.IsInRole("chief") || User.IsInRole("manager") || User.IsInRole("marketer"))
+    {
+        <div id="chartsTab" class="tabPayments">Графики</div>
+    }
+</div>
+<div class="card text-center">
+@if (User.IsInRole("chief") || User.IsInRole("manager") || User.IsInRole("marketer"))
+{
+    <div id="charts" class="d-none">
+        <div class="card-header">
+            <h5 class="card-title mb-3">Линейные графики</h5>
+            <div style="margin:auto; width: 740px;">
+                <div class="form-row ">
+                    <div class="form-group col-md-5 mr-2">
+                        <select id="chartType" class="form-control">
+                            <option value="payments">Все платежи</option>
+                            <option value="newPayments">Платежи от новых клиентов</option>
+                            <option value="newClients">Новые клиенты</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <select id="branchSelector" class="form-control">
+                            <option value="@null">Все филиалы</option>
+                            @foreach (var branch in ViewBag.Branches)
+                            {
+                                <option value="@branch.Id">@branch.Address @branch.Info</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button id="getChartBtn" type="button" class="btn btn-secondary" style="    margin-left: 660px;
+                                                                                             margin-top: -100px;">Подтвердить</button>
+
+            <h5 class="card-title border-top mt-3 pt-3 mb-3">Столбчатый график платежей</h5>
+            <div style="margin:auto; width: 740px;">
+                <div class="form-row mb-2">
+                    <div class="col-md-3 mr-2">
+                        <label for="fromDate">С </label>
+                        <input value="@DateTime.Now.ToShortDateString()" type="date" class="form-control" id="fromDate">
+                    </div>
+                    <div class="col-md-3 mr-2">
+                        <label for="toDate">По</label>
+                        <input value="@DateTime.Now.AddDays(6).ToShortDateString()" type="date" class="form-control" id="toDate">
+                    </div>
+                    
+                    <div class="col-md-4 mr-3">
+                        <label for="branchSelectorBar">Выберите филиал</label>
+                        <select id="branchSelectorBar" class="form-control">
+                            <option value="@null">Все филиалы</option>
+                            @foreach (var branch in ViewBag.Branches)
+                            {
+                                <option value="@branch.Id">@branch.Address @branch.Info</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <p id="invalidBarChartParams" class="text-danger"></p>
+            <button class="btn btn-secondary" id="getBarChartBtn" type="button" style="margin-left: 650px;
+                                                                                               margin-top: -100px;">Получить</button>
+        </div>
+        <div id="chart" class="card-body">
+    
+        </div>
+    </div>
+}
+
+<div id="paymentTable">
+    <div class="card-header">
+        <div style="margin-left:150px; margin-right:150px">
+            <form asp-route-branchId="@Model.Branch.Id" class="mb-3 border-bottom" asp-action="Index">
+                <div class="form-row align-items-center">
+                    <div class="col-auto">
+                        <label>
+                            Поиск клиента по имени
+                            <input type="text" class="form-control" asp-for="FilterByName">
+                        </label>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-group">
+                            <label for="toDate">Тренер</label>
+                            <select asp-for="CoachId" class="form-control">
+                                <option>Все</option>
+                                @foreach (Employee empl in Model.Coaches)
+                                {
+                                    <option value="@empl.Id">@empl.NameSurname</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-group">
+                            <label for="toDate">Болезнь</label>
+                            <select asp-for="SicknessId" class="form-control">
+                                <option>Все</option>
+                                @foreach (Sickness sickness in ViewBag.Sicknesses)
+                                {
+                                    <option value="@sickness.Id">@sickness.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <label>
+                            С
+                            <input type="date" class="form-control" asp-for="From">
+                        </label>
+                    </div>
+                    <div class="col-auto">
+                        <label>
+                            По
+                            <input type="date" class="form-control" asp-for="To">
+                        </label>
+                    </div>
+                    <div class="col-auto mt-3">
+                        <button type="submit" class="btn btn-secondary">Фильтровать</button>
+                    </div>
+                </div>
+            </form>
+            <form asp-route-branchId="@Model.Branch.Id" asp-action="Index" class="mt-3">
+                <div class="form-row align-items-center">
+                    <div class="col-auto">
+                        <div class="form-group">
+                            <label>
+                                Сортировка по параметрам
+                                <select asp-for="SortSelect" class="form-control">
+                                    <option>Сортирока по</option>
+                                    <option value="@SortPaymentsBy.Memberships">По абонементу</option>
+                                    <option value="@SortPaymentsBy.Price">По цене</option>
+                                    <option value="@SortPaymentsBy.Group">По группе</option>
+                                    <option value="@SortPaymentsBy.Comment">По комментарию</option>
+                                    <option value="@SortPaymentsBy.Sickness">По болезни</option>
+                                    <option value="@SortPaymentsBy.Debtors">По должникам</option>
+                                    <option value="@SortPaymentsBy.Debts">По задолженности</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-group">
+                            <label>
+                                С
+                                <input type="date" class="form-control" asp-for="From">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-group">
+                            <label>
+                                По
+                                <input type="date" class="form-control" asp-for="To">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input asp-for="SortReverse" class="form-check-input" type="checkbox" id="autoSizingCheck">
+                            <label class="form-check-label" for="autoSizingCheck">
+                                В обратном порядке
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-secondary mb-1">Сортировать</button>
+                    </div>
+                </div>
+            </form>
+            <p id="paymentsSum" class="mt-3">Общая сумма - @(Model.CashSum + Model.CardSum).Нал - @Model.CashSum, безнал - @Model.CardSum</p>
+        </div>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title text-center">Филиал - @Model.Branch.Name</h5>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Абонемент</th>
+                <th scope="col">Имя клиента, номер телефона</th>
+                <th scope="col">Дата создания</th>
+                <th scope="col">Комментарий</th>
+                <th scope="col">Задолженность</th>
+                <th scope="col">Оплаченная сумма</th>
+                @if (User.IsInRole("chief"))
+                {
+                    <th scope="col"></th>
+                }
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var payment in Model.Payments)
+            {
+                <tr>
+                    <td scope="row">@payment.ClientsMembership.Membership.Category.Name @payment.ClientsMembership.Membership.Price тг. @payment.ClientsMembership.Membership.AttendanceDays посещений</td>
+                    <td scope="row">@payment.ClientsMembership.Client.NameSurname, @payment.ClientsMembership.Client.PhoneNumber</td>
+                    <td scope="row">
+                        @payment.CateringDate.ToShortDateString()
+                        <br/>Последнее обновление - @payment.LastUpdate.ToShortDateString()
+                    </td>
+                    <td scope="row">@payment.Comment</td>
+                    <td scope="row">@payment.Debts</td>
+                    <td scope="row">
+                        @if (payment.CashSum != 0)
+                        {
+                            <span>Нал - @payment.CashSum<br/></span>
+                        }
+                        @if (payment.CardSum != 0)
+                        {
+                            <span>Безнал - @payment.CardSum</span>
+                        }
+                    </td>
+                    @if (User.IsInRole("chief"))
+                    {
+                        <td scope="row">
+                            <i id="@payment.Id" class="far fa-edit editIcon"></i>
+                        </td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer text-muted d-flex justify-content-between">
+        @if (Model.CurrentPage != 1)
+        {
+            <form asp-action="Index" asp-route-branchId="@Model.Branch.Id" asp-route-pageTo="@(Model.CurrentPage - 1)">
+                <input type="hidden" asp-for="FilterByName" value="@Model.FilterByName"/>
+                <input type="hidden" asp-for="SortReverse" value="@Model.SortReverse"/>
+                <input type="hidden" asp-for="SortSelect" value="@Model.SortSelect"/>
+                <input type="hidden" asp-for="FilterByName" value="@Model.FilterByName"/>
+                <input type="hidden" asp-for="IsNextPage" value="@Model.IsNextPage"/>
+                <input type="hidden" asp-for="PaymentsLength" value="@Model.PaymentsLength"/>
+                <button type="submit" class="btn btn-outline-dark">
+                    Назад
+                </button>
+            </form>
+        }
+        @if (Model.IsNextPage)
+        {
+            <form asp-action="Index" asp-route-branchId="@Model.Branch.Id" asp-route-pageTo="@(Model.CurrentPage + 1)">
+                <input type="hidden" asp-for="FilterByName" value="@Model.FilterByName"/>
+                <input type="hidden" asp-for="SortReverse" value="@Model.SortReverse"/>
+                <input type="hidden" asp-for="SortSelect" value="@Model.SortSelect"/>
+                <input type="hidden" asp-for="FilterByName" value="@Model.FilterByName"/>
+                <input type="hidden" asp-for="IsNextPage" value="@Model.IsNextPage"/>
+                <input type="hidden" asp-for="PaymentsLength" value="@Model.PaymentsLength"/>
+                <button type="submit" class="btn btn-outline-dark">
+                    Вперед
+                </button>
+            </form>
+        }
+    </div>
+</div>
+
+</div>
+@section Scripts{
+    <script src="~/js/Chart.min.js"></script>
+    @if (User.IsInRole("chief"))
+    {
+        <div id="editModals"></div>
+        <script>
+        var payments = $('.editIcon');
+        for (var i = 0; i < payments.length; i++) {
+            let payment = payments[i];
+            $(payment).on('click', function () {
+                $.get('@Url.Action("GetEditModalAjax", "Payments")/?paymentId=' + $(payment).attr('id'), function (data) {
+                    $('#editModals').html(data);
+                    $(document.getElementById("paymentEditModal")).modal('show');
+                })
+            })
+        }
+        </script>
+    }
+    
+    <script>
+        $('#chartsTab').on('click', function () {
+            $("#paymentTableTab").removeClass("tabActive");
+            $('#chartsTab').addClass('tabActive');
+            $.get("@Url.Action("GetPaymentsChartAjax", "Payments")", function (data) {
+                $('#scripts').html(data);
+                $('#paymentTable').addClass('d-none');
+                $('#chart').html($('#chartAllSum-@DateTime.Now.Year'));
+                $('#charts').removeClass('d-none');
+            })
+        })
+        $('#paymentTableTab').on('click', function () {
+            $("#paymentTableTab").addClass("tabActive");
+            $('#chartsTab').removeClass('tabActive');
+            $('#paymentTable').removeClass('d-none');
+            $('#charts').addClass('d-none');
+        })
+    </script>
+    <script>
+        $('#getBarChartBtn').on('click', function () {
+            var fromDate = $('#fromDate').val();
+            var toDate = $('#toDate').val();
+            $('#chartAllSum-@DateTime.Now.Year').remove();
+            $.ajax({
+                url: '@Url.Action("GetPaymentsBarChartAjax", "Payments")',
+                data: { branchId: $('#branchSelectorBar').val(), fromDate: fromDate, toDate: toDate },
+                success: function (data) {
+                    if (data == false) {
+                        $('#invalidBarChartParams').html('По заданным параметрам платежей не было найдено');
+                    }
+                    else {
+                        $('#scripts').html(data);
+                        $('#chart').html($('#chartAllSum-@DateTime.Now.Year'));
+                        $('#invalidBarChartParams').html('');
+                    }
+                }
+            })
+        })
+    </script>
+    <script>
+        $('#getChartBtn').on('click', function () {
+            var type = $('#chartType').val();
+            $('#chartAllSum-@DateTime.Now.Year').remove();
+            if (type == 'newPayments') {
+                $.ajax({
+                    url: '@Url.Action("GetNewPaymentsChartAjax", "Payments")',
+                    data: { branchId: $('#branchSelector').val() },
+                    success: function (data) {
+                        $('#scripts').append(data);
+                        $('#chart').html(document.getElementById('chartAllSum-@DateTime.Now.Year'));
+                    }
+                })
+            }
+            else if (type == 'payments') {
+                $.ajax({
+                    url: '@Url.Action("GetPaymentsChartAjax", "Payments")',
+                    data: { branchId: $('#branchSelector').val() },
+                    success: function (data) {
+                        $('#scripts').append(data);
+                        $('#chart').html(document.getElementById('chartAllSum-@DateTime.Now.Year'));
+                    }
+                })
+            }
+            else if (type == 'newClients') {
+                $.ajax({
+                    url: '@Url.Action("GetNewClientsChartAjax", "Payments")',
+                    data: { branchId: $('#branchSelector').val() },
+                    success: function (data) {
+                        $('#scripts').append(data);
+                        $('#chart').html(document.getElementById('chartAllSum-@DateTime.Now.Year'));
+                    }
+                })
+            }
+        })
+    </script>
+    <div id="scripts" class="d-none"></div>
+    }

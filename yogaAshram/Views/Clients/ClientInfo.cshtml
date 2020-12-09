@@ -1,0 +1,107 @@
+﻿
+@using yogaAshram.Services
+@model TrialUsers
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h3>Информация о клиенте</h3>
+<p>Фио: @Model.Client.NameSurname</p>
+<p> Номер телефона: @Model.Client.PhoneNumber</p>
+<p>Состояние: @GetEnumDescription.GetDescription(@Model.Client.ClientType)</p>
+<p>Группа: @Model.Client.Group.Name</p>
+<p> Создал: @Model.Client.Creator.NameSurname</p>
+<p> Дата добавления: @Model.Client.DateCreate</p>
+
+@if (@Model.Client.ClientType == ClientType.Probe)
+{
+    <a asp-action="BuyMembership" asp-controller="Membership" asp-route-clientId="@Model.Client.Id" asp-route-branchId="@Model.Group.BranchId" class="btn btn-primary mb-2">Сделать активным</a>
+}
+
+<table class="table" id="customers">
+    <tr>
+      
+        <th>Дата пробного</th>
+        <th>Посещение</th>
+         <th>Статус</th>
+        <th>Коментарии</th>
+          <th></th>
+    </tr>
+    @foreach (var client in @ViewBag.Lessons)
+    {
+        <tr>
+           
+            <td>@client.LessonTime</td>
+            
+            <td style="background: @client.GetColorTrial()"> @client.GetValueOfState()</td>   
+            <td style="background: @client.Client.GetColorOfState()">@GetEnumDescription.GetDescription(@client.Client.ClientType)</td>
+            <td>
+                @if (@client.SellerComments != null)
+                             {
+                                 @foreach (var comment in @client.SellerComments)
+                                 {
+                                     <p class="small">@comment.Text</p>
+                                 }
+                             }<br/>
+              
+            </td>
+            <td>
+                <a type="button" class="open-AddBookDialog btn btn-primary" data-toggle="modal" data-target="#sendComment" data-id="@client.Id">
+                    Коментировать
+                </a>
+            </td>
+        </tr>
+        
+    }
+
+</table>
+
+
+<div class="modal" id="sendComment">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Написать коментари</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+          <form asp-action="WriteComment" asp-controller="Clients" method="post">
+               <input  name="clientId" id="clientId" value="" type="hidden">
+              <textarea name="SellerComment" required cols="40" rows="2" class="form-control"></textarea><br/>
+              <input type="submit" value="Сохранить" class="btn btn-success">
+          </form>
+
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Закрыть</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+@section Scripts
+{
+    <script>$(document).on("click", ".open-AddBookDialog", function () {
+                     var myBookId = $(this).data('id');
+                     $(".modal-body #clientId").val( myBookId );
+                  
+                });</script>
+    
+}
+
+
+
+
+
+
+  

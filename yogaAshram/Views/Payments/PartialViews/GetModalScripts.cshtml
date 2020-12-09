@@ -1,0 +1,15 @@
+﻿
+<div id="paymentModals"></div>
+<script>
+    var btns = $(".getPaymentCreateModal");
+    for (var i = 0; i < btns.length; i++) {
+        let btn = btns[i];
+        $(btn).on('click', function () {
+            let clientId = $(btn).attr('clientId');
+            $.get("@Url.Action("GetCreateModalAjax", "Payments")/?clientId=" + clientId, function (data) {
+                $('#paymentModals').html(data);
+                $(document.getElementById('paymentCreateModal')).modal('show');
+            });
+        });
+    }
+</script>

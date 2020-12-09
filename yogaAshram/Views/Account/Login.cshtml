@@ -1,0 +1,57 @@
+﻿
+@model AccountLoginModelView
+@{
+    ViewBag.Title = "Аутентификация";
+}
+
+<div class="loginBlock">
+<div id="login-container">
+    <h3>Аутентификация</h3>
+    <hr>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <form asp-action="Login" method="post" asp-antiforgery="true" style="position:relative;" asp-route-returnUrl="@Model.ReturnUrl">
+              <div class="text-center text-danger">
+                  <div asp-validation-summary="ModelOnly"></div>
+              </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="email-label">
+                        <i class="fa fa-user-circle" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <input asp-for="Authentificator" class="form-control w-75" placeholder="Введите эл. почту или логин" aria-label="Email" aria-describedby="email-label">
+                <div class="text-center text-danger mt-2">
+                    <span asp-validation-for="Authentificator" class="spanS"></span>
+                </div>
+            </div>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="password-label">
+                        <i class="fa fa-key" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <input asp-for="Password" type="password" class="form-control w-75" placeholder="Введите пароль" aria-label="Password" aria-describedby="password-label">
+                <div class="text-center text-danger mt-2">
+                <span asp-validation-for="Password" class="spanS"></span>
+                </div>
+            </div>
+              <div class="text-center">
+              <button type="submit" class="btn btn-customized">Войти</button>
+            </div>
+             <div class="text-center linkLogin">
+                  <a asp-controller="Account" asp-action="ForgotPassword" class="text-white">Забыли пароль?</a>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

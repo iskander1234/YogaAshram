@@ -1,0 +1,53 @@
+﻿
+@model LineChartModelView
+@using Newtonsoft.Json;
+<canvas id="chartAllSum-@DateTime.Now.Year" width="400" height="200"></canvas>
+<script class="chartScripts">
+    var json = "@JsonConvert.SerializeObject(Model.Data)".replace(/(&quot\;)/g, "\"");
+    var paymentsChartData = JSON.parse(json);
+    var mths = ["Месяца" , "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+        "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+    months = [""];
+    var sums = [0];
+    var allSum = 0;
+    for (var i = 0; i < paymentsChartData.length; i++) {
+        months[i + 1] = mths[paymentsChartData[i].month];
+        sums[i + 1] = paymentsChartData[i].sum;
+        allSum += sums[i + 1];
+    }
+	var stackedLine = new Chart(document.getElementById('chartAllSum-@DateTime.Now.Year'), {
+    	type: 'line',
+    	data: {
+    		datasets: [{
+            	label: 'График платежей за @DateTime.Now.Year год',
+            	data: sums,
+            	lineTension: 0,
+            	spanGaps: true
+        	}],
+    		labels: months
+    	},
+    	options: {
+        	scales: {
+            	yAxes: [{
+                	display: true,
+    				scaleLabel: {
+      					display: true,
+      					labelString: 'Общая сумма - ' + allSum
+    				},
+    				ticks: {
+      					min: 0,
+      					max: @Model.MaxY,
+						stepSize: @Model.Step
+    				}
+            	}],
+            	xAxes: [{
+                	display: true,
+    				scaleLabel: {
+      					display: true,
+      					labelString: "@DateTime.Now.Year год"
+    				}
+            	}]
+        	}
+    	}
+	});
+</script>

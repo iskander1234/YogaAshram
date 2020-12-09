@@ -1,0 +1,39 @@
+﻿@model Withdrawal
+
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+  <p>На кассе: @ViewBag.CurrentSum.Total тг<span> Налл:@ViewBag.CurrentSum.CashSum</span> <span>Безналл: @ViewBag.CurrentSum.CreditSum </span></p>
+<h2>Снять деньги</h2>
+<form method="post" asp-controller="Transactions" asp-action="Withdraw">
+   <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="IsCash">Выберите тип</label><br />
+        <select asp-for="IsCash" class="form-control">
+            <option value="true"> Наличные</option>
+            <option value="false">Безналл</option>
+        </select>
+       
+    </div>
+      <div>
+           <label asp-for="Sum">Сумма</label><br />
+           <input asp-for="@Model.Sum" class="form-control " />
+           <span asp-validation-for="Sum"></span>
+       </div>
+   <div>
+       <label asp-for="Comment">Коментарий</label><br />
+       <textarea asp-for="Comment" class="form-control "  ></textarea>
+       <span asp-validation-for="Comment"></span>
+   </div>
+   <input asp-for="@Model.BranchId"  value="@Model.BranchId" type="hidden"/>
+ 
+   <div>
+       <input type="submit" class="btn btn-secondary mt-3" value="Подтвердить" />
+   </div>
+</form>
+
+@section Scripts {
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

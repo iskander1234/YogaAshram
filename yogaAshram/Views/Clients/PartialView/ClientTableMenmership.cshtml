@@ -1,0 +1,125 @@
+
+@using System.Collections
+@model PageViewModel<ClientTableViewModel>
+
+    <h3 class="text-center">Таблица о клиентах</h3>
+   
+<div class="row justify-content-end mb-1">
+    <div class="dropdown w-50 mb-2 col-sm">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            По сроку абонемента
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li>
+                <a class="dropdown-item" asp-controller="Clients" asp-action="Index" asp-route-membershipLeftDays="14">Осталось 0-14 дней</a>
+                <a class="dropdown-item" asp-controller="Clients" asp-action="Index" asp-route-membershipLeftDays="7">Осталось 0-7 дней</a>
+                <a class="dropdown-item" asp-controller="Clients" asp-action="Index" asp-route-membershipLeftDays="3">Осталось 0-3 дня</a>
+                <a class="dropdown-item" asp-controller="Clients" asp-action="Index" asp-route-membershipLeftDays="1">Осталось 0-1 день</a>
+            </li>
+        </ul>
+    </div>
+    <div class="dropdown w-50 mb-2 col-sm">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            По заморозкам
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li>
+                <a class="dropdown-item" asp-controller="Clients" asp-action="Index" asp-route-frozenTimes="3">Осталось 3 заморозок</a>
+                <a class="dropdown-item" asp-controller="Clients" asp-action="Index" asp-route-frozenTimes="2">Осталось 2 заморозок</a>
+                <a class="dropdown-item" asp-controller="Clients" asp-action="Index" asp-route-frozenTimes="1">Осталось 1 заморозок</a>
+                <a class="dropdown-item" asp-controller="Clients" asp-action="Index" asp-route-frozenTimes="0">Осталось 0 заморозок</a>
+                <a class="dropdown-item bg-light" asp-controller="Clients" asp-action="Index" asp-route-dateFrozen="0">За сегодня</a>
+                <a class="dropdown-item bg-light" asp-controller="Clients" asp-action="Index" asp-route-dateFrozen="-3">За 3 дня</a>
+                <a class="dropdown-item bg-light" asp-controller="Clients" asp-action="Index" asp-route-dateFrozen="-7">За неделю</a>
+                <a class="dropdown-item bg-light" asp-controller="Clients" asp-action="Index" asp-route-dateFrozen="-14">За 14 дней</a>
+            </li>
+        </ul>
+    </div>
+    <div class="dropdown w-50 mb-2 col-sm">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            По пропускам
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li>
+                <a class="dropdown-item bg-light" asp-controller="Clients" asp-action="Index" asp-route-dateAbsent="0">За сегодня</a>
+                <a class="dropdown-item bg-light" asp-controller="Clients" asp-action="Index" asp-route-dateAbsent="-3">За 3 дня</a>
+                <a class="dropdown-item bg-light" asp-controller="Clients" asp-action="Index" asp-route-dateAbsent="-7">За неделю</a>
+                <a class="dropdown-item bg-light" asp-controller="Clients" asp-action="Index" asp-route-dateAbsent="-14">За 14 дней</a>
+            </li>
+        </ul>
+    </div>
+    <div class="dropdown w-50 mb-2 col-sm">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            По инструкторам
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            @foreach (Group group in (IEnumerable) @ViewBag.Coaches)
+            {
+                <li>
+                    <a class="dropdown-item bg-light" asp-controller="Clients" asp-action="Index" asp-route-coachId="@group.CoachId">@group.Coach.NameSurname</a>
+                </li>
+            }            
+        </ul>
+    </div>
+    <div class="col-sm">
+    <a class="btn btn-dark" asp-controller="Clients" asp-action="Index">Сбросить</a>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Имя, категория</th>
+        <th scope="col">Номер телефона</th>
+        <th scope="col">Группа и центр</th>
+        <th scope="col">Инструктор</th>
+        <th scope="col">Комментарии</th>
+        <th scope="col" >Абонемент</th>
+        <th scope="col" >Осталось посещений</th>
+        <th scope="col" >Пропуски</th>
+        <th scope="col" >Осталось заморозок</th>
+        <th scope="col">Дата окончания абонемента</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var clients in Model.OrderBy(c => c.ClientsMembership.DateOfExpiry))
+    {
+        <tr>
+            <td><a asp-action="ClientСabinet" asp-controller="Clients" asp-route-clientId="@clients.Client.Id">@clients.Client.NameSurname</a>, @clients.Client.Membership.Category.Name</td>
+            <td>@clients.Client.PhoneNumber</td>
+            <td>@clients.Client.Group.Name из центра "@clients.Client.Group.Branch.Name"</td>
+            <td>@clients.Client.Group.Coach.NameSurname</td>
+            @if (@clients.Client.Comments.Count != 0)
+            {
+                <td>
+                    @foreach (Comment comment in @clients.Client.Comments)
+                    {
+                        <p class="small">@comment.Text</p>
+                    }
+                </td>
+            }
+            else
+            {
+                <td>Комментариев нет</td>
+            }
+            <td>@clients.Client.Membership.Name</td>
+            <td>@clients.Attendance.AttendanceCount.AttendingTimes</td>
+            <td>
+                @clients.Attendance.AttendanceCount.AbsenceTimes
+                @foreach (var comment in @clients.Client.Comments.Where(c => c.Reason == Reason.Пропуск))
+                {
+                    <p class="small">@comment.Date.ToString("dd.MM.yyyy")</p>
+                }
+            </td>
+            <td>
+                @clients.Attendance.AttendanceCount.FrozenTimes
+                @foreach (var comment in @clients.Client.Comments.Where(c => c.Reason == Reason.Заморозка))
+                {
+                    <p class="small">@comment.Date.ToString("dd.MM.yyyy")</p>
+                }
+            </td>
+            <td>@clients.ClientsMembership.DateOfExpiry.ToString("d.MM.yyyy")</td>
+        </tr>
+    }
+    </tbody>
+</table>

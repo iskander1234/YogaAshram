@@ -1,0 +1,43 @@
+﻿
+@model PageViewModel<ClientTableViewModel>
+
+@{
+    ViewBag.Title = "Список клиентов";
+    Layout = "_Layout";
+}
+
+
+@{
+    await Html.RenderPartialAsync("PartialView/ClientTableMenmership");
+}
+<div class="d-flex justify-space-around">
+        @{
+            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        }
+        <a asp-action="Index"
+           asp-route-membershipLeftDays = "@ViewData["CurrentSort"]"
+           asp-route-frozenTimes = "@ViewData["FrozenTimes"]"
+           asp-route-dateFrozen = "@ViewData["DateFrozen"]"
+           asp-route-dateAbsent = "@ViewData["DateAbsent"]"
+           asp-route-coachId="@ViewData["Coach"]"
+           asp-route-pageNumber = "@(Model.PageIndex - 1)"
+           class="btn btn-outline-dark @prevDisabled">
+            Назад
+        </a>
+        <a asp-action="Index"
+           asp-route-membershipLeftDays = "@ViewData["CurrentSort"]"
+           asp-route-frozenTimes = "@ViewData["FrozenTimes"]"
+           asp-route-dateFrozen = "@ViewData["DateFrozen"]"
+           asp-route-dateAbsent = "@ViewData["DateAbsent"]"
+           asp-route-coachId="@ViewData["Coach"]"
+           asp-route-pageNumber = "@(Model.PageIndex + 1)"
+           class="ml-2 btn btn-outline-dark @nextDisabled">
+            Вперед
+        </a>
+        </div>
+@section Scripts{
+    <script>
+    
+    </script>
+}

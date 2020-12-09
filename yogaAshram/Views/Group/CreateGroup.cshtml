@@ -1,0 +1,62 @@
+
+@using System.Collections
+@model CreateGroupModelView
+
+@{
+    ViewBag.Title = "Добавить новую группу";
+    Layout = "_Layout";
+}
+
+<div class="row d-flex justify-content-center">
+    <div class="col-md-6">
+        <h2>Добавить новую группу</h2>
+        <form method="post" asp-controller="Group" asp-action="CreateGroup">
+            <label>Филиал</label>
+            <select class="form-control mb-4" asp-for="BranchId">
+                @if (Enumerable.Count(@ViewBag.Branches) == 0)
+                {
+                    <p>Не найдено ни одного центра</p>
+                }
+                else
+                {
+                    @foreach (Branch branch in (IEnumerable) @ViewBag.Branches)
+                    {
+                        <option value="@branch.Id">@branch.Name</option>
+                    }
+                }
+            </select>
+            <div>
+                <span asp-validation-for="Name"></span>
+                <label >Название группы</label><br/>
+                <input class="form-control mb-4" asp-for="Name"/>
+            </div>
+            <div>
+                <span asp-validation-for="CoachId"></span>
+                <label> Тренер</label><br/>
+                 <select class="form-control mb-4" asp-for="CoachId">
+                                @if (Enumerable.Count(@ViewBag.Coaches) == 0)
+                                {
+                                    <p>Не найдено ни одного тренера</p>
+                                }
+                                else
+                                {
+                                    @foreach (Employee coach in (IEnumerable) @ViewBag.Coaches)
+                                    {
+                                        <option value="@coach.Id">@coach.NameSurname</option>
+                                    }
+                                }
+                            </select>
+            </div>
+            <div>
+                <br/>
+                <input style="margin-left: 170px;width: 200px;" class="btn btn-secondary text-white my-4" type="submit" value="Создать"/>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

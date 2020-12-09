@@ -1,0 +1,118 @@
+﻿
+<!-- Modal -->
+<div class="modal fade" id="coachCreateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавить инструктора</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+               
+            
+                  <div class="form-group">
+                                    <label>Имя и фамилия<span class="text-danger">*</span></label>
+                                    <input id="emplNameSurname" type="text" class="form-control">
+                                    <p id="invalidNameSurname" class="text-danger"></p>
+                                </div>
+                
+              
+              
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-dismiss="modal">Закрыть</button>
+                <button id="submitCreateEmpl" type="button" class="btn btn-secondary">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#submitCreateEmpl').on('click', function () {
+        var email = $('#emplEmail');
+        var truth = true;
+        if (!checkRequired(email.val())) {
+            $('#invalidEmail').html('Введите почту');
+            truth = false;
+        }
+        else {
+            $.get('@Url.Action("CheckEmailCreate", "Validation")/?email=' + $(email).val(), function (data) {
+                if (data) {
+                    $('#invalidEmail').html('');
+                    var userName = $('#emplUserName');
+                    if (!checkRequired($(userName).val())) {
+                        $('#invalidLogin').html('Введите логин');
+                        truth = false;
+                    }
+                    else {
+                        $.get('@Url.Action("CheckUserNameCreate", "Validation")/?userName=' + $(userName).val(), function (data) {
+                            if (data) {
+                                $('#invalidLogin').html('');
+                                var nameSurname = $('#emplNameSurname');
+                                if (!checkRequired($(nameSurname).val())) {
+                                    $('#invalidNameSurname').html('Введите имя и фамилию');
+                                    truth = false;
+                                }
+                                else {
+                                    $('#invalidNameSurname').html('');
+                                    var role = $('#roleSelect');
+                                    if ($(role).val() == '...') {
+                                        $('#invalidRole').html('Выберите роль');
+                                        truth = false;
+                                    }
+                                    else {
+                                        $.get('@Url.Action("CheckRoleExistence", "Validation")/?role=' + $(role).val(), function (data) {
+                                            if (data) {
+                                                $('#invalidRole').html('');
+                                                    if (truth) {
+                                                        $('#emplCreateModal').modal('hide');
+                                                        $.ajax({
+                                                            url: '@Url.Action("" +
+                                                                              "CreateAjax", "Employees")',
+                                                            type: 'POST',
+                                                            datatype: "json",
+                                                            cache: false,
+                                                            data: {
+                                                                "NameSurname": $(nameSurname).val(),
+                                                                "UserName": $(userName).val(),
+                                                                "Email": $(email).val(),
+                                                                "Role": $(role).val()
+                                                            },
+                                                            success: function (data) {
+                                                                if (data != 'true') {
+                                                                    $('#invalidConfirmPassword').html(data);
+                                                                }
+                                                                else {
+                                                                    document.location.reload(true);
+                                                                }
+                                                            }
+                                                        })
+                                                 }
+                                            }
+                                            else {
+                                               $('#invalidRole').html('Выберите роль');
+                                               truth = false;
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                            else {
+                                $('#invalidLogin').html('Такой логин уже существует');
+                                truth = false;
+                            }
+                        });
+                    }
+                }
+                else {
+                    $('#invalidEmail').html('Такая почта уже существует');
+                    truth = false;
+                }
+            });
+
+        }
+    })
+</script>
+

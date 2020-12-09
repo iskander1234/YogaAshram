@@ -1,0 +1,70 @@
+﻿
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model IEnumerable<TrialUsers>
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+<h2>Посещаемость</h2>
+<form method="post">
+    <input name="HbranchId" value="@ViewBag.BranchIdHidden" type="hidden"/>
+    <table class="table">
+        <th>Id</th>
+        <th>Клиент</th>
+        <th>Группа</th>
+        <th>Дата урока</th>
+        <th>Состояние</th>
+
+        @foreach (var client in @Model)
+        {
+
+            <tr>
+                <td>@client.Id</td>
+                <td>@client.Client.NameSurname</td>
+                <td>@client.Group.Name</td>
+                <td>@client.LessonTime.ToShortDateString()</td>
+
+                <td>
+                    <input name="arrayOfCustomerID" value="@client.Id" type="hidden">
+                    <select name="arrayOfState">
+
+                        <option value="2">Пришел</option>
+                        <option value="3">Непришел</option>
+                    </select>
+                </td>
+            </tr>}
+
+    </table>
+    <input class="btn btn btn-outline-secondary btn-block my-4" id="SendForm" type="submit" value="Сохранить"/>
+</form>
+
+   
+@section Scripts
+{
+    
+    <script>
+   $( "#SendForm" ).onsubmit(function()
+   {
+     
+       const arrayOfCustomerID = [];
+       const arrayOfState = [];
+       var HbranchId;
+           $.ajax({
+               url: @Url.Action("CheckAttendanceTrial","Clients"),
+               type: "POST",
+               datatype: "json",
+               traditional: true,
+               data: {
+                   
+                  arrayOfCustomerID : arrayOfCustomerID,
+                  arrayOfState : arrayOfState,
+                  HbranchId:HbranchId
+               },
+               success: function (data) {
+                  console.log("Успешно");
+               }
+           });
+   });
+   
+    </script>
+}

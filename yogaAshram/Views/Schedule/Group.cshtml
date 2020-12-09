@@ -1,0 +1,666 @@
+﻿
+@using System.Collections
+@using System.Globalization
+@model Schedule
+
+@{
+	ViewBag.Title = "Расписание группы";
+	Layout = "_Layout";
+}
+<div class="tabs">
+    <input type="radio" name="tab-btn" id="tab-btn-1" value="" checked>
+<label for="tab-btn-1">Группа</label>
+@if (User.IsInRole("chief") || User.IsInRole("manager") || User.IsInRole("admin"))
+{
+	 <input type="radio" name="tab-btn" id="tab-btn-2" value="">
+        <label for="tab-btn-2">Отметить</label>
+}
+   
+    <input type="radio" name="tab-btn" id="tab-btn-3" value="">
+<label for="tab-btn-3">Добавить пробника</label>
+@if (User.IsInRole("chief") || User.IsInRole("manager") || User.IsInRole("admin"))
+{
+	<input type="radio" name="tab-btn" id="tab-btn-4" value="">
+     <label for="tab-btn-4">Добавить нового клиента</label>
+     <input type="radio" name="tab-btn" id="tab-btn-5" value="">
+         <label for="tab-btn-5">Добавить существующего клиента </label>
+	
+}
+    
+    <div id="content-1">
+	    @{ Html.RenderPartial("PartialViews/_GroupInfoPartialView.cshtml");
+	    }
+    </div>
+<div id="content-2">
+	@{
+		Html.RenderPartial("PartialViews/_AttendanceCheckPartial.cshtml");
+	}
+</div>
+@* Форма добавления пробника  *@
+<div id="content-3">
+
+	<h2>Записать на пробное занятие</h2>
+	<form method="post" asp-controller="Clients" asp-action="CreateClients">
+		<div class="row">
+			<input asp-for="BranchId" value="@Model.BranchId" type="hidden">
+			<input type="hidden" asp-for="@Model.ClientsCreateModelView.ClientType" value="0">
+			<input class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.GroupId" value="@Model.GroupId" type="hidden">
+			<div class="col-sm-6">
+				<label class="form-control">
+					<strong>Группа:</strong> @Model.Group.Name</label>
+			</div>
+			<div class="col-sm-6">
+				<label class="form-control">
+					<strong>Дата первого занятия:</strong> @Model.ChosenDate.ToString("D")</label>
+			</div>
+			<div class="col-sm-6">
+				<label>
+					Количество занятий
+				</label>
+				<select asp-for="@Model.ClientsCreateModelView.LessonNumbers" class="form-control mb-4">
+					<option value="1" class="form-control mb-4">1 пробное занятие</option>
+					<option value="3" class="form-control mb-4">3 пробных занятии</option>
+				</select>
+			</div>
+			<div class="col-sm-6">
+				<label>
+					Электронная почта
+				</label>
+				<span asp-validation-for="@Model.ClientsCreateModelView.Email"></span>
+				<input class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.Email" placeholder="Еmаil"/>
+			</div>
+			<input type="hidden" class="form-control mb-4 w-50" value="@Model.GroupId" asp-for="@Model.ClientsCreateModelView.GroupId">
+			<input type="hidden" asp-for="@Model.ClientsCreateModelView.StartDate" value="@Model.ChosenDate">
+		</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<label >
+					ФИО<span class="text-danger">*</span>
+				</label>
+				<span asp-validation-for="@Model.NameSurname"></span>
+				<input class="form-control mb-4" asp-for="@Model.NameSurname" placeholder="Ф.И.О"/>
+
+			</div>
+			<div class="col-sm-6">
+				<label>
+					Дата рождения</label>
+				<input type="date" value="1900-02-02" min="1900-01-01" max="2015-12-31" class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.DateOfBirth">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<label>
+					Номер телефона<span class="text-danger">*</span>
+				</label>
+				<span asp-validation-for="@Model.PhoneNumber"></span>
+				<input class="form-control mb-4" id="phone-mask" asp-for="@Model.PhoneNumber" placeholder="8777777777"/>
+			</div>
+			<div class="col-sm-6">
+				<label>Откуда вы о нас узнали? <span class="text-danger">*</span></label><br/>
+				<span asp-validation-for="@Model.ClientsCreateModelView.Source"></span>
+				<select class="form-control mb-4" asp-for="ClientsCreateModelView.Source">
+					<option value="">...</option>
+					<option value="Инстаграм страница">Инстаграм страница</option>
+					<option value="Таргет в инстаграмме">Таргет в инстаграмме</option>
+					<option value="Инстаграм страница">Инстаграм страница</option>
+					<option value="Вывеска">Вывеска</option>
+					<option value="По рекомендации">По рекомендации</option>
+					<option value="По брошюре">По брошюре</option>
+					<option value="2ГИС">2ГИС</option>
+					<option value="1Fit">1Fit</option>
+					<option value="Гугл реклама">Гугл реклама</option>
+					<option value="Яндекс реклама">Яндекс реклама </option>
+					<option value="Другое">Другое</option>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-6">
+				<label>Наличие заболеваний</label>
+				<select class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.SicknessId">
+					@foreach (Sickness sickness in  @ViewBag.Sicknesses)
+					{
+						<option value="@sickness.Id">
+							@sickness.Name
+						</option>
+					}
+				</select>
+
+				<button id="show" type="button" class="btn btn-light mb-2">Добавить другое</button>
+				<div class="input-group mb-3" id="showAddinialField">
+					<input type="text" class="form-control" id="sicknessInput" name="newSikness" placeholder="Название болезни" aria-describedby="basic-addon2">
+					<div class="input-group-append">
+						<span class="input-group-text" id="basic-addon2">
+							<a onclick="hideAdditinal()">
+								<i class="fa fa-times" aria-hidden="true"></i>
+							</a>
+						</span>
+					</div>
+				</div>
+
+
+			</div>
+
+
+			<div class="col-sm-6">
+
+				<label>Место работы и должность</label><br/>
+				<input class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.WorkPlace">
+			</div>
+		</div>
+		<div class="row separate "></div>
+		<div class="row">
+			<div class="col-sm-12">
+				<label>Комментари</label><br/>
+				<span asp-validation-for="@Model.ClientsCreateModelView.Comment"></span>
+
+				<textarea class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.Comment" rows="2" placeholder="Коментарии"></textArea>
+			</div>
+		</div>
+		<input class="form-control mb-4 w-50" asp-for="@Model.ClientsCreateModelView.StartDate" type="hidden" value="@Model.ChosenDate">
+		<button class="btn btn-light mt-3" type="submit">Добавить</button>
+	</form>
+
+</div>
+
+@* Форма нового клиента *@
+<div id="content-4">
+	 
+      		<h5 class="mb-3">Форма для нового клиента</h5>
+      		<form method="post" asp-controller="Clients" asp-action="NewClientRegister">
+                   <label>Выберите абонемент</label>
+            			<select id="subscriptionType" class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.MembershipId" >
+            				@foreach (Membership membership in  @ViewBag.Memberships)
+            				{
+            					<option value="@membership.Id">"@membership.Name". Цена - @membership.Price тг.</option>
+            				}
+            			</select>
+	            @{
+               		  Html.RenderPartial("PartialViews/_CreateClientPartial.cshtml");
+               	  }
+      			                <button class="btn btn-light" type="submit">Добавить</button>
+                  	    </form>                			
+      			
+    </div>
+    
+    <div id="content-5">
+	    <div id="ExistingClient">
+		    <div class="row">
+			    <div class="col-sm-12">
+				    <span>Выберите клиента</span>
+                		    <select id="regularClients" class="form-control statesSelect " style="width: 50%" onchange="openRegularClientForm()" required="required">
+                			    <option value="">Выберите из списка</option>
+                			    @foreach (Client client in (IEnumerable) @ViewBag.OldClients)
+                			    {
+				                    <option value='{"id":"@client.Id","phone":"@client.PhoneNumber","email":"@client.Email","birthday":"@client.DateOfBirth.ToString("yyyy-MM-dd")","workPlace":"@client.WorkPlace","source":"@client.Source","sickness":"@client.Sickness"}'>@client.NameSurname</option>
+                			    }
+                		    </select>
+		    </div>
+		    </div>
+		    <div class="separate"></div>
+		   
+		    <form method="post" asp-controller="Clients" asp-action="OldClientRegister">
+			    <div class="row">
+			   
+				    <div class="col-sm-6">
+					    <label class="form-control">
+						    <strong>Группа:</strong> @Model.Group.Name</label>
+				    </div>
+				    <div class="col-sm-6">
+					    <label class="form-control">
+						    <strong>Дата первого занятия:</strong> @Model.ChosenDate.ToString("D")</label>
+				    </div>
+               <div class="col-sm-6">
+			    <label>Выберите абонемент</label>
+			    <select id="subscriptionType" class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.MembershipId">
+				    @foreach (Membership membership in (IEnumerable) @ViewBag.Memberships)
+				    {
+					    <option value="@membership.Id">"@membership.Name". Цена - @membership.Price тг.</option>
+				    }
+			    </select>
+
+			    <input type="hidden" class="form-control mb-4 w-50" value="@Model.GroupId" asp-for="@Model.ClientsCreateModelView.GroupId">
+			    <input id="membershipIdTrial" type="hidden" asp-for="@Model.ClientsCreateModelView.MembershipId">
+			    <input type="hidden" asp-for="@Model.ClientsCreateModelView.StartDate" value="@Model.ChosenDate">
+			    <input type="hidden" id="trialClientId" name="clientId">
+               </div>
+				    <div class="col-sm-6">
+					    <span asp-validation-for="@Model.NameSurname"></span>
+					    <label>Ф.И.О</label><br/>
+					    <input class="form-control mb-4" asp-for="@Model.NameSurname" id="trialNameInput"/>
+				    </div>
+				    <div class="col-sm-6">
+					    <span asp-validation-for="@Model.ClientsCreateModelView.DateOfBirth"></span>
+					    <label>Дата рождения</label><br/>
+					    <input class="form-control mb-4" type="date" asp-for="@Model.ClientsCreateModelView.DateOfBirth" id="birthdayInput"/>
+				    </div>
+			    </div>
+			    <div class="row">
+				    <div class="col-sm-6">
+					    <span asp-validation-for="@Model.PhoneNumber"></span>
+					    <label>Номер телефона</label><br/>
+					    <input class="form-control mb-4" asp-for="@Model.PhoneNumber" id="trialPhoneInput"/>
+				    </div>
+
+				    <div class="col-sm-6">
+					    <span asp-validation-for="@Model.ClientsCreateModelView.Email"></span>
+					    <label>Еmаil</label><br/>
+					    <input class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.Email" id="emailInput"/>
+				    </div>
+			    </div>
+
+			    <div class="row">
+				    <div class="col-sm-6">
+					    <span asp-validation-for="@Model.ClientsCreateModelView.Source"></span>
+					    <label>Откуда вы о нас узнали?</label><br/>
+					    <select class="form-control mb-4" asp-for="ClientsCreateModelView.Source">
+						    <option >...</option>
+						    <option value="Инстаграм страница">Инстаграм страница</option>
+						    <option value="Таргет в инстаграмме">Таргет в инстаграмме</option>
+						    <option value="Инстаграм страница">Инстаграм страница</option>
+						    <option value="Вывеска">Вывеска</option>
+						    <option value="По рекомендации">По рекомендации</option>
+						    <option value="По брошюре">По брошюре</option>
+						    <option value="2ГИС">2ГИС</option>
+						    <option value="1Fit">1Fit</option>
+						    <option value="Гугл реклама">Гугл реклама</option>
+						    <option value="Яндекс реклама">Яндекс реклама </option>
+						    <option value="Другое">Другое</option>
+					    </select>
+				    </div>
+				    <div class="col-sm-6">
+					    <label>Наличие заболеваний</label>
+					    <select class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.SicknessId">
+						    @foreach (Sickness sickness in (IEnumerable) @ViewBag.Sicknesses)
+						    {
+							    <option value="@sickness.Id">
+								    @sickness.Name
+							    </option>
+						    }
+					    </select>
+			    </div>
+			  
+			  
+				    <div class="col-sm-6">
+					    <label>Место работы и должность</label><br/>
+					    <textarea class="form-control mb-4" rows="2" asp-for="@Model.ClientsCreateModelView.WorkPlace" id="workPlaceInput"></textarea>
+				    </div>
+				    <div class="col-sm-6">
+					    <span asp-validation-for="@Model.ClientsCreateModelView.Comment"></span>
+					    <label>Комментарий</label><br/>
+					    <textarea class="form-control mb-4" asp-for="@Model.ClientsCreateModelView.Comment" rows="2"></textArea>
+				    </div>
+			    </div>
+			    <button class="btn btn-light mt-2" type="submit">Добавить</button>
+		    </form>
+	    </div>
+    </div>
+  </div>
+
+
+@if ( User.IsInRole("seller") ||User.IsInRole("admin") )
+{
+
+
+}
+
+@section Scripts
+{
+	@{
+		 await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	 }
+	 @{
+     		 await Html.RenderPartialAsync("../Membership/PartialViews/GetExtendModalScripts");
+	 }
+	<script>
+    	var phoneMask = IMask(
+          document.getElementById('phone-mask'), {
+            mask: '+{7}(700)000-00-00'
+            
+          });
+    	var phoneMask2 = IMask(
+                  document.getElementById('phone-mask2'), {
+                    mask: '+{7}(700)000-00-00'
+                    
+                  });
+    	
+    	</script>
+	
+	<script>
+             $(document).ready(function () {
+              $(".statesSelect").select2();
+             });
+        </script>
+	<script >
+	function attendAndComment(attenId){        
+            var opval = $('#cameOrNot-' + attenId).val(); 
+            if(opval === "2" || opval === "3" || opval === "5"){ 
+                $('#attendAndComment-' + attenId).modal("show"); 
+            }        
+    };
+</script>
+	<script type="text/javascript">
+    	function regularAttendAndComment(attenId) {            
+                var state = $('#cameOrNot-' + attenId).val();
+                var date = $('#dateForAttendance').text();
+                var clientName = $('#clientName-' + attenId).text();
+                var attId = $('#inputAttendance-' + attenId).val();
+                var clientId = $('#inputClientId-' + attenId).val();
+                var reason = $('#commentAndAttendInput-' + attenId).val();
+                if(reason !== ''){
+                	$.ajax({
+                    url : '@Url.Action("RegularAttendance", "Clients")',
+                    type : 'POST',
+                    data : {              
+                    'state': state,
+                    'date': date,
+                    'attendanceId': attId,
+                    'clientId': clientId,
+                    'reason': reason                        
+                    },                                                         
+                       success: function (data) {                                 
+                       setTimeout(function(){  
+                       if(data === "errorCheckedAlready"){
+                            $('#log').text(clientName + ' уже отмечен');         
+                       } 
+                       else if(data === "errorNeedToCheckPrev"){
+                            $('#log').text('У ' + clientName + ' есть неотмеченные занятия :)');         
+                       }
+                       else if(data === "errorAttend"){
+                             $('#log').text(clientName + ' пора обновить абонемент');         
+                       } 
+                       else if(data === "errorFrozen"){
+                             $('#log').text('У ' + clientName + ' использованы все заморозки');         
+                       }
+                       else if (data === "success"){                 
+                             $('#log').text(clientName + ' успешно отмечен');                     
+                             $("#absTimes").load(" #absTimes");
+                       }                                                                                                                
+                       }, 700)                            
+                    },
+                    })
+                  } 
+                else{
+                	$('#log').text('Укажите причину');
+                }
+                }
+                    	  
+    	</script>
+	<script type="text/javascript">
+	 	$(".input").focus(function() {
+	 		$(this).parent().addClass("focus");
+	 	})
+	 </script>
+	<script >	
+	$("#weekdays").weekLine({
+            mousedownSel: false,            
+            dayLabels: ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"], 
+            onChange: function () {
+                   $("#dayOfWeekInput").val(
+                           $(this).weekLine('getSelected')
+              );
+            }
+     });
+	</script>
+    <script>      
+       var groupsIds =  $('#groupIdArray').text();            
+       $.each(groupsIds.split(' '), function(index, value) {
+         $('select > option').filter(function () {
+         	return $(this).val() == value
+         }).prop('disabled', true)
+       });      
+    </script>
+	<script >
+  function validateSalaryTo(){
+         var timeFrom = parseInt($("#timeInputStart").val());
+    var timeTo = parseInt($("#timeInputFinish").val());     
+           if (timeTo < timeFrom) {
+           	 $('#error').text('Время начала занятия не может больше времени окончания').show().delay(1500).fadeOut();
+              $('#submitBtn').prop('disabled', true);
+            } 
+          else {
+              $('#submitBtn').prop('disabled', false);             
+            }
+          };
+  function validateSalaryFrom(){
+           var timeFrom = parseInt($("#timeInputStart").val());
+      var timeTo = parseInt($("#timeInputFinish").val());     
+             if (timeTo < timeFrom) {
+                $('#submitBtn').prop('disabled', true);
+                 $('#error').text('Время начала занятия не может больше времени окончания').show().delay(1500).fadeOut();
+              } 
+            else {
+                $('#submitBtn').prop('disabled', false);            
+              }
+            };
+</script>
+	<script >
+	function validateForm() {
+   
+        var timeStart = $('#timeInputStart').val();
+        var timeFinish = $('#timeInputFinish').val();
+        var week = $('#dayOfWeekInput').val();
+       
+            if (week === "") {
+            $('#error').text('Необходимо выбрать день').show().delay(1500).fadeOut();
+            return false;
+            }
+            else if (timeStart === ""){
+            $('#error').text('Необходимо выбрать время начала занятия').show().delay(1500).fadeOut();
+                return false;
+            }
+            else if (timeFinish === ""){
+            $('#error').text('Необходимо выбрать время окончания занятия').show().delay(1500).fadeOut();
+                return false;
+            }
+            else {
+            	
+            	$.ajax({
+                url : '@Url.Action("Edit", "Schedule")',
+                type : 'POST',
+                data : {              
+                'groupId' : $("#groupIdInput").val(),
+                'color': $("#selectColor").val(),
+                'scheduleTime': timeStart,
+                'scheduleFinishTime': timeFinish, 
+                'dayOfWeeks': week,      
+             },                                                         
+            success: function (data) {
+             console.log(data);
+                                                
+             setTimeout(function(){  
+             if(data === "errorTime"){
+             $('#error').text('В это время уже есть занятие').show().delay(1500).fadeOut();        
+             }             
+             else if (data === "success"){
+              $("#reloadCalendar").load(" #reloadCalendar");   
+              $("#createSchedule").load(" #createSchedule");
+              $("#reloadSchedule").load(" #reloadSchedule");
+              $("#scheduleCreate").modal("toggle");
+              }                                                                                                                
+              }, 700)                            
+          },
+        })
+      }          
+   }
+	</script>
+	<script >
+	$(function () {   
+        $('#editSchedule').on('submit', function (e) {
+          e.preventDefault();    
+          validateForm();
+        });
+      });
+	</script>
+	
+	<script >
+            $(function(){
+            	var timeStart = $('#timeForEditStart').text();
+            	$('#timeInputStart').val(timeStart);
+            	var timeFinish = $('#timeForEditFinish').text();
+                $('#timeInputFinish').val(timeFinish);
+                var days =  $('#datesForEdit').text();
+                $('#dayOfWeekInput').val(days);
+            });
+            </script>
+	 <script>
+
+</script>
+	 <script >	 
+	  function openClientForm(){
+	  	var option = $('#clientType').val();
+	  	
+	  	if(option === '1'){
+	  		$('.trialBlock').toggle();
+	  		$('.baseClientBlock').hide();
+	  		$('#selectType').hide();
+	  	}
+	  	else if(option === '2'){
+	  		$('.baseClientBlock').toggle();
+	  		$('.trialBlock').hide();
+	  		$('#selectType').hide();
+	  	}
+	  }
+</script>
+	 <script >
+	 function openDetailedForm(){
+     	  	var option = $('#subscriptionType').val();
+     	  	var optionText = $('#subscriptionType  option:selected').text();
+     	  	var theArray = option.split(" ");
+     	  	var membershipId = theArray.pop();
+     	  	
+     	  	if(option.includes('12') || option.includes('8') || option.includes('4') || option.includes('1')){
+     	  		$('#bigForm').toggle();
+     	  		$('#smallForm').hide();
+     	  		$('.baseClientBlock').hide();
+     	  		$('#membershipId').val(membershipId);
+     	  		$('#membershipIdTrial').val(membershipId);
+     	  		$('#membershipText').text(optionText);
+     	  		$('#membershipTextTrial').text(optionText);
+     	  	}	      	  	
+     	  }
+</script>
+	<script >
+	 function openFormToAddNew(){
+	 	$('#formForNewClient').toggle();
+        $('#clientTypeSelection').hide();
+       
+	 }
+	 function openToChooseOld(){
+     	 	$('#chooseTypeFromList').toggle();
+            $('#clientTypeSelection').hide();            
+     	 }
+     	 
+     	 function openTrialClientForm() {
+              	   var optionValue = $('#trialClients').val();
+              	   var obj = $.parseJSON(optionValue);
+              	   var optionText = $('#trialClients option:selected').text();
+                      $('#trialPhoneInput').val(obj.phone);
+                      $('#trialNameInput').val(optionText);
+                      $('#trialClientId').val(obj.id);
+                      $('#emailInput').val('');
+                      $('#workPlaceInput').val('');
+                      $('#sourceInput').val('');
+                      $('#birthdayInput').val('');
+                      $('#sicknessInput').val('');
+              	 }
+         function openRegularClientForm() {
+                       	   var optionValue = $('#regularClients').val();                       	  
+                       	   var obj = $.parseJSON(optionValue);
+                       	   var optionText = $('#regularClients option:selected').text();
+                               $('#trialPhoneInput').val(obj.phone);
+                               $('#trialNameInput').val(optionText);
+                               $('#trialClientId').val(obj.id);
+                               $('#emailInput').val(obj.email);
+                               $('#workPlaceInput').val(obj.workPlace);
+                               $('#sourceInput').val(obj.source);
+                               $('#birthdayInput').val(obj.birthday);
+                               $('#sicknessInput').val(obj.sickness);
+                       	 }     	 
+</script>
+	<script type="text/javascript">
+	function checkRegularAttendance(attenId) {
+        
+            var state = $('#cameOrNot-' + attenId).val();
+            var date = $('#dateForAttendance').text();
+            var clientName = $('#clientName-' + attenId).text();
+            var attId = $('#inputAttendance-' + attenId).val();
+            var clientId = $('#inputClientId-' + attenId).val();
+                	$.ajax({
+                    url : '@Url.Action("RegularAttendance", "Clients")',
+                    type : 'POST',
+                    data : {              
+                    'state': state,
+                    'date': date,
+                    'attendanceId': attId,
+                    'clientId': clientId                         
+                 },                                                         
+                success: function (data) {
+                 console.log(data);
+                                                    
+                 setTimeout(function(){  
+                 if(data === "errorCheckedAlready"){
+                 $('#log').text(clientName + ' уже отмечен');         
+                 } 
+                 else if(data === "errorNeedToCheckPrev"){
+                 $('#log').text('У ' + clientName + ' есть неотмеченные занятия :)');         
+                 } 
+                 else if(data === "errorAttend"){
+                 $('#log').text(clientName + ' пора обновить абонемент');         
+                 } 
+                 else if(data === "errorFrozen"){
+                 $('#log').text('У ' + clientName + ' использованы все заморозки');         
+                 }
+                 else if (data === "success"){                 
+                  $('#log').text(clientName + ' успешно отмечен');                     
+                    $("#absTimes").load(" #absTimes");
+                  }                                                                                                                
+                  }, 700)                            
+              },
+            })
+          }                 
+	</script>
+	<script type="text/javascript">
+    	function sendComment(attenId) {            
+                var comment = $('#commentInput-' + attenId).val();
+                var attCountId = $('#attendanceCountId-' + attenId).val();
+                    	$.ajax({
+                        url : '@Url.Action("CommentFromAttendance", "Clients")',
+                        type : 'POST',
+                        data : {              
+                        'comment': comment,
+                        'clientId': attCountId                                                                       
+                     },                                                         
+                    success: function (data) {                                                       
+                     setTimeout(function(){  
+                     if (data === "success"){                       	
+                       $("#commentSection-" + attenId).load(" #commentSection-" + attenId); 
+                       $("#commentInput-" + attenId).val('');  
+                      }                                                                                                                
+                      }, 700)                            
+                  },
+                })
+              }                 
+    	</script>
+	
+		<script>
+		$(document).ready(function(){
+             $("#showAddinialField").hide();
+          $("#show").click(function(){
+            $("#showAddinialField").show();
+            
+          });
+        });
+    </script>
+	<script>
+	function hideAdditinal() {
+	    
+	    $("#sicknessInput").val("");
+	        $("#showAddinialField").hide();
+	  
+	}
+	</script>
+	
+	
+}
+

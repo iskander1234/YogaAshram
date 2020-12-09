@@ -1,0 +1,57 @@
+﻿
+@inject UserManager<Employee> UserManager
+@using Microsoft.AspNetCore.Identity
+@model AdminIndexModel
+
+@{
+    ViewBag.Title = "Главная";
+    Layout = "_Layout";
+}
+
+<div class="container">
+
+    
+    @if (@Model.Branch != null)
+    {
+        <h5 class="mb-2 mt-2">Добро пожаловать, @Model.Employee.UserName!</h5>
+        <h5 class="mb-4">Центр: @Model.Branch.Name</h5>
+                                                                 
+  
+        
+        <a asp-action="Scheduele" asp-controller="Admin" asp-route-branchId="@Model.Branch.Id" class="btn btn-outline-dark">Календарь</a> 
+        <a asp-action="Trials" asp-controller="Clients" asp-route-branchId="@Model.Branch.Id" class="btn btn-outline-dark">Пробники</a>
+        <a asp-action="RegularClients" asp-controller="Clients" asp-route-branchId="@Model.Branch.Id" class="btn btn-outline-dark">Клиенты</a>
+        <a asp-action="Index" asp-controller="Transactions" asp-route-branchId="@Model.Branch.Id" class="btn btn-outline-dark">Касса</a>
+       
+    }
+    else
+    {
+        <p class="text-center">Добро пожаловать, @Model.Employee.UserName!</p>
+        <p class="text-center">Не найдено ни одного центра, где вы являетесь администратором. Пожалуйста, обратитесь к директору</p>
+        <p class="text-center">
+            А пока вы можете только
+            <a data-target="editProfileModal" id="@Url.Action("GetEditModalAjax", "Employees")" class="getModal cursor-p text-primary">
+                изменить свой профиль
+            </a>
+            или
+            <a data-target="changePasswordModal" id="@Url.Action("GetChangePasswordModalAjax", "Employees")" class="getModal cursor-p text-primary">
+                поменять пароль
+            </a>
+        </p>
+    }
+</div>
+@section Scripts{
+    <script>
+            $('#showIndex').click(function() {
+                $('#showIndex').css('display', 'none');
+                $('#dataIndex').show();
+                $('#hideIndex').show();
+            });
+                   
+            $('#hideIndex').click(function() {
+                $('#hideIndex').css('display', 'none');
+                $('#dataIndex').hide();
+                $('#showIndex').show();
+            });
+    </script>
+}

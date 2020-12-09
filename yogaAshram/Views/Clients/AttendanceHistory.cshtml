@@ -1,0 +1,45 @@
+﻿
+@model System.Collections.Generic.List<yogaAshram.Models.Attendance>
+
+@{
+    ViewBag.Title = "Истор ";
+    Layout = "_Layout";
+}
+
+<div class="container-xl mt-n2 mb-3">
+ <table class="table table-bordered ">
+         
+         
+         
+                 <tr>
+         
+                     <th>@Model[0].Client.NameSurname</th>
+         
+                     @foreach (var att in @Model)
+                     {
+         
+                         <td>
+                             @att.Date
+                         </td>
+         
+                     }
+                 </tr>
+         
+         
+                 <tr>
+                     <th>@Model[0].Group.Name</th>
+                     @foreach (var att in @Model)
+                     {
+         
+                         <td>
+                             @att.AttendanceState
+                         </td>
+         
+                     }
+                 </tr>
+         
+             </table>
+</div>
+
+
+

@@ -1,0 +1,33 @@
+﻿@model List<Branch>
+
+@{
+    ViewBag.Title = "Выбор филиала";
+    Layout = "_Layout";
+}
+
+
+ <div class="container text-center">
+        <h4 class="card-title">Выберите центр для перехода</h4>
+        @if (!@Model.Any())
+        {
+            <p class="text-center">Список центров пуст</p>
+        }
+        else
+        {
+            @foreach (Branch branch in @Model)
+            {
+                <p>
+                    <hr>
+                    Центр йоги : <b>@branch.Name</b> <br>
+                   
+                    <a class="btn btn-sm btn-outline-secondary mt-2" type="button" asp-action="Index" asp-controller="Schedule" asp-route-branchId="@branch.Id">Календарь</a>
+                     <a class="btn btn-sm btn-outline-secondary mt-2" type="button" asp-action="Index" asp-controller="Transactions" asp-route-branchId="@branch.Id">Касса</a>
+                    <a class="btn btn-sm btn-outline-secondary mt-2" type="button"  asp-action="Trials" asp-controller="Clients" asp-route-branchId="@branch.Id">Пробники</a>
+                    <a class="btn btn-sm btn-outline-secondary mt-2" type="button" a asp-action="RegularClients" asp-controller="Clients" asp-route-branchId="@branch.Id">Активные клиенты</a>
+                     <a class="btn btn-sm btn-outline-secondary mt-2" type="button" a asp-action="History" asp-controller="Group" asp-route-branchId="@branch.Id">История посещения</a>
+                    <hr>
+                </p>
+                
+            }
+        }
+    </div>

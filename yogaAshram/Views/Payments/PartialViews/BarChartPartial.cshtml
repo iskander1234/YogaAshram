@@ -1,0 +1,67 @@
+﻿
+@model BarChartModelView
+@using Newtonsoft.Json;
+<canvas id="chartAllSum-@DateTime.Now.Year" width="400" height="200"></canvas>
+<script class="chartScripts">
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+    var json = "@JsonConvert.SerializeObject(Model.Columns)".replace(/(&quot\;)/g, "\"");
+    window.chartColors = [
+	    'rgb(255, 99, 132)',
+	    'rgb(255, 159, 64)',
+	    'rgb(255, 205, 86)',
+	    'rgb(75, 192, 192)',
+	    'rgb(54, 162, 235)',
+	    'rgb(153, 102, 255)',
+	    'rgb(201, 203, 207)'
+    ];
+    var colors = [];
+    var paymentsChartData = JSON.parse(json);
+    dates = [];
+    var sums = [];
+    var allSum = 0;
+    for (var i = 0; i < paymentsChartData.length; i++) {
+        dates[i] = paymentsChartData[i].Date;
+        sums[i] = paymentsChartData[i].Sum;
+        allSum += sums[i];
+        colors[i] = window.chartColors[getRandomInt(window.chartColors.length)];
+    }
+	var stackedLine = new Chart(document.getElementById('chartAllSum-@DateTime.Now.Year'), {
+    	type: 'bar',
+    	data: {
+    		datasets: [{
+            	label: 'График платежей с @Model.From.ToShortDateString() по @Model.To.ToShortDateString()',
+                data: sums,
+                backgroundColor: colors,
+                borderWidth: 1,
+            	spanGaps: true
+        	}],
+    		labels: dates
+    	},
+    	options: {
+        	scales: {
+            	yAxes: [{
+                	display: true,
+    				scaleLabel: {
+      					display: true,
+      					labelString: 'Общая сумма - ' + allSum
+    				},
+    				ticks: {
+      					min: 0,
+      					max: @Model.MaxY,
+						stepSize: @Model.Step
+    				}
+            	}],
+            	xAxes: [{
+                	display: true,
+    				scaleLabel: {
+      					display: true,
+      					labelString: "@DateTime.Now.Year год"
+    				}
+            	}]
+        	}
+    	}
+	});
+</script>
+}

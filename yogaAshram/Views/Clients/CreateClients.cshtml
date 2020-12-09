@@ -1,0 +1,72 @@
+﻿
+@using System.Collections
+@model ClientsCreateModelView
+
+@{
+    ViewBag.Title = "Добавление клиентов";
+    Layout = "_Layout";
+}
+
+<div class="row d-flex justify-content-center">
+    <div class="col-md-6">
+        <h2>Добавить клиента</h2>
+        <form method="post" asp-controller="Clients" asp-action="CreateClients">
+            
+            <
+            <div>
+                <label>Группы</label>
+                <select class="form-control mb-4" asp-for="GroupId">
+                    @if (Enumerable.Count(@ViewBag.Groups) == 0)
+                    {
+                        <p>Не найдено ни одной группы</p>
+                    }
+                    else
+                    {
+                        @foreach (Group group in (IEnumerable) @ViewBag.Groups)
+                                                 {
+                                                     <option value="@group.Id">@group.Name</option>
+                                                 }
+                    }
+                </select>
+            </div>
+            <div class="form_row">
+                <label>
+                    Статус клиента
+                    <select asp-for="ClientType">
+                        <option value="0">Пробник</option>
+                    </select>
+                </label>
+            </div>
+              <div class="form_row">
+                            <label>
+                              Количество занятии
+                              <select asp-for="LessonNumbers">
+                                  <option value="1">1 пробное занятие</option>
+                                  <option value="3">3 пробных занятии</option>
+                              </select>
+                            </label>
+                        </div>
+            <div>
+                <div>
+                    <span asp-validation-for="StartDate"></span>
+                    <label>Дата занятия</label><br/>
+                    <input class="form-control mb-4" asp-for="StartDate" type="date">
+                </div>
+                <div>
+                    <span asp-validation-for="Comment"></span>
+                    <label>Коментарии</label><br/>
+                    <input class="form-control mb-4" asp-for="Comment">
+                </div>
+
+                <br/>
+                <input class="btn btn-outline-secondary btn-block my-4" type="submit" value="Добавить"/>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

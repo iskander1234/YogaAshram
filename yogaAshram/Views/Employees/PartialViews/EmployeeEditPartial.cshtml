@@ -1,0 +1,105 @@
+﻿
+@model EmployeeEditModelView
+<!-- Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Редактирование профиля</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Ваш логин</label>
+                        <input id="userNameEdit" class="form-control" asp-for="UserName">
+                        <span class="text-danger" id="userNameError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Ваша почта</label>
+                        <input id="emailEdit" class="form-control" asp-for="Email">
+                        <span class="text-danger" id="emailError"></span>
+                    </div>
+                    <div class="form-group">
+                        <label>Ваши имя и фамилия</label>
+                        <input id="nameSurnameEdit" class="form-control" asp-for="NameSurname">
+                        <span class="text-danger" id="nameSurnameError"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Закрыть</button>
+                    <button id="editSaveBtn" class="btn btn-secondary">Сохранить</button>
+                </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document.getElementById('editSaveBtn')).on('click', function () {
+        var email = $('#emailEdit');
+        console.log(checkRequired(email.val()));
+        var truth = true;
+        if (!checkRequired(email.val())) {
+            $('#emailError').html('Введите почту');
+            truth = false;
+        }
+        else {
+            $.get('@Url.Action("CheckEditEmail", "Validation")/?email=' + $(email).val(), function (data) {
+                if (data) {
+                    $('#emailError').html('');
+                    var userName = $('#userNameEdit');
+                    if (!checkRequired($(userName).val())) {
+                        $('#userNameError').html('Введите логин');
+                        truth = false;
+                    }
+                     else {
+                        $.get('@Url.Action("CheckEditUserName", "Validation")/?userName=' + $(userName).val(), function (data) {
+                        if (data) {
+                            $('#userNameError').html('');
+                                var nameSurname = $('#nameSurnameEdit');
+                                if (!checkRequired($(nameSurname).val())) {
+                                    $('#nameSurnameError').html('Введите имя и фамилию');
+                                    truth = false;
+                                }
+                                else {
+                                    $('#nameSurnameError').html('');
+                            }
+                            if (truth) {
+            $('#editProfileModal').modal('hide');
+            $.ajax({
+                url: '@Url.Action("EditAjax", "Employees")',
+                type: 'POST',
+                datatype: "json",
+                cache: false,
+                data: {
+                    "NameSurname": $(nameSurname).val(),
+                    "UserName": $(userName).val(),
+                    "Email": $(email).val()
+                },
+                success: function (data) {
+                    if (data != 'true') {
+                        $('#invalidConfirmPassword').html(data);
+                    }
+                    else {
+                        document.location.reload(true);
+                    }
+                }
+            })
+        }
+                        }
+                        else {
+                            $('#userNameError').html('Такой логин уже существует');
+                            truth = false;
+                        }
+                    });
+                    }
+                }
+                else {
+                    $('#emailError').html('Такая почта уже существует');
+                    truth = false;
+                }
+            });
+
+        }
+    })
+</script>

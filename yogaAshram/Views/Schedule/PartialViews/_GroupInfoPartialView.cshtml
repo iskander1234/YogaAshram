@@ -1,0 +1,66 @@
+﻿
+@model Schedule
+
+      <h2 class="text-center">Расписание группы "@Model.Group.Name"</h2>
+         <p><strong>Тренер:</strong> @Model.Group.Coach.NameSurname</p>
+         <div id="reloadSchedule">
+         <hr>
+         	<strong>Дни:</strong>
+         	@foreach (var day in @Model.DayOfWeeksString)
+         	{
+         		<span> @day</span>
+         	}
+         	<p><strong>Время:</strong> @Model.StartTime.ToString("hh\\:mm") - @Model.FinishTime.ToString("hh\\:mm")</p>
+         	@if (User.IsInRole("chief"))
+         	{
+         		<button data-toggle="modal" data-target="#scheduleCreate" class="btn btn-outline-dark">Изменить расписание</button>
+         		<a asp-action="Index" asp-controller="Schedule" asp-route-branchId="@Model.BranchId" class="btn btn-outline-dark">Назад</a>
+         	}
+         
+         	<p class="text-hide" id="datesForEdit">@ViewBag.DaysArray</p>
+         	<p class="text-hide" id="timeForEditStart">@Model.StartTime</p>
+         	<p class="text-hide" id="timeForEditFinish">@Model.FinishTime</p>
+         </div>
+         
+         	<div class="modal fade w-100" id="scheduleCreate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+         	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+         		<div class="modal-content">
+         			<div class="modal-header">
+         				<h5 class="modal-title" id="exampleModalLongTitle">Изменить расписание</h5>
+         				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+         					<span aria-hidden="true">&times;</span>
+         				</button>
+         			</div>
+         			<div class="modal-body">
+         				<form id="editSchedule">
+         					<input type="hidden" asp-for="GroupId" value="@Model.GroupId" id="groupIdInput">
+         					<label>Выберите цвет:</label>
+         					<select name="color" class="form-control mb-2 w-25" id="selectColor">
+         						<option value="primary" class="bg-primary">Синий</option>
+         						<option value="success" class="bg-success">Зеленый</option>
+         						<option value="danger" class="bg-danger">Красный</option>
+         						<option value="warning" class="bg-warning">Желтый</option>
+         						<option value="info" class="bg-info">Голубой</option>
+         						<option value="dark" class="bg-dark text-light">Черный</option>
+         					</select>
+         					<label class="mt-2">Время начала занятия:</label>
+         					<input type="time" id="timeInputStart" name="scheduleTime" class="form-control w-25" onchange="validateSalaryFrom()">
+         					<label class="mt-2">Время окончания занятия:</label>
+         					<input type="time" id="timeInputFinish" name="scheduleFinishTime" class="form-control w-25" onchange="validateSalaryTo()">
+                        		
+                        		
+         					<div class="mb-2 mt-2">
+         						<label class="">Дни:</label>
+         						<input name="dayOfWeeks" id="dayOfWeekInput" class="form-control w-50 mb-4" readonly>
+         						
+         					</div>
+         					<button class="btn btn-outline-secondary mt-4" type="submit" id="submitBtn">Изменить</button>
+         					<div class="mt-2 text-danger" id="error"></div>
+         				</form>
+         			</div>
+         			<div class="modal-footer">
+         				<button type="button" class="btn btn-outline-primary" data-dismiss="modal">Закрыть</button>
+         			</div>
+         		</div>
+         	</div>
+         </div>

@@ -1,0 +1,50 @@
+﻿@inject UserManager<Employee> UserManager
+@using Microsoft.AspNetCore.Identity
+@model SellerIndexModel
+
+
+@{
+    ViewBag.Title = "Главная";
+    Layout = "_Layout";
+}
+<div class="container">
+
+
+
+    <h2 class="ml-4 mb-3">Продавец</h2>
+
+  
+
+    <div class="card text-center mt-4">
+        <div class="card-header">
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Филиалы</h5>
+            @foreach (var branch in @Model.Branches)
+            {
+                <p>Центр йоги : <b>@branch.Name</b></p>
+                <a class="btn btn-sm btn-outline-secondary mb-3" type="button" asp-action="Index" asp-controller="Schedule" asp-route-branchId="@branch.Id">Календарь</a>
+                <a class="btn btn-sm btn-outline-secondary mb-3" type="button" asp-action="Trials" asp-controller="Clients" asp-route-branchId="@branch.Id">Пробники</a>
+            }
+        </div>
+        <div class="card-footer text-muted">
+            
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $('#showIndex').click(function() {
+            $('#showIndex').css('display', 'none');
+            $('#dataIndex').show();
+            $('#hideIndex').show();
+        });
+               
+        $('#hideIndex').click(function() {
+            $('#hideIndex').css('display', 'none');
+            $('#dataIndex').hide();
+            $('#showIndex').show();
+        });
+    </script>
+}

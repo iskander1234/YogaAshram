@@ -1,0 +1,88 @@
+﻿@using System.Collections
+@using Castle.Core.Internal
+@using yogaAshram.Services
+@model List<List<Attendance>>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+   
+}
+
+<form method="get">
+    <div class="form-inline form-group">
+        <label class="p-2 font-weight-bold"> Месяц </label>
+          <input  value="@ViewBag.BranchId" name="branchId"  hidden="hidden" />
+        <input type="month" id="start" name="start"
+               min="2019-10" value="@DateTime.Now"  class="form-control mb-2 mr-sm-2"> 
+       <label class="p-2 font-weight-bold ">Группа </label>
+        <select name="groupId" id="" class="form-control mb-2 mr-sm-2">
+            
+            @foreach (var gr in @ViewBag.Groups)
+            {
+                <option value="@gr.Id"> @gr.Name</option>
+            }
+        </select>
+       
+        <input type="submit" value="Поиск" class="btn btn-secondary mb-2" />
+    </div>
+</form>
+
+
+@if (@Model.Count > 0)
+{
+    <h3> Список посещении центра @Model[0][0].Group.Branch.Name </h3>
+    <h4> Тренер @Model[0][0].Group.Coach.NameSurname </h4>
+
+    <div class="table-responsive">
+        <table class=" table table-bordered small">
+            <tr>
+                <thead>
+                <th>
+                    ФИО клиента
+                </th>
+                <th>
+                    Дата абонемента
+                </th>
+
+                @for (int i = 1; i < @Model[0].Count + 1; i++)
+                {
+                    <th>@i</th>
+                }
+                </thead>
+            </tr>
+            <tbody>
+            @foreach (var att in @Model)
+            {
+                <tr>
+                    <td>
+                        @att[0].Client.NameSurname
+                    </td>
+                    <td>
+                        @att[0].ClientsMembership.FirstDateOfLesson.ToShortDateString() - @att[0].ClientsMembership.DateOfExpiry.ToShortDateString()
+                    </td>
+                    @foreach (var a in @att.OrderBy(p => p.Date))
+                    {
+                        <td style="background-color: @a.GetColor()">
+                            @a.Date.ToShortDateString()<br/>
+                            @GetEnumDescription.GetDescription(a.AttendanceState)
+                        </td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p> Список пуст </p>
+}
+@section Scripts
+{
+    <script>
+    document.getElementById("start").value = '@DateTime.Now.Year-@DateTime.Now.Month';
+    </script>
+}
+
+ 

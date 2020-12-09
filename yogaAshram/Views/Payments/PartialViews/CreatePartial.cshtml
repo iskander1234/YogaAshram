@@ -1,0 +1,92 @@
+﻿
+@model PaymentCreateModelView
+<!-- Modal -->
+<div class="modal fade" id="paymentCreateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Новый платеж</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (Model.Client.Paid == Paid.Есть_долг)
+                {
+                    <p class="text-center">Есть долг в размере @(-Model.Client.Balance) тг</p>
+                }
+                <fieldset disabled>
+                    <div class="form-group">
+                        <label id="membership-@Model.Client.Membership.Id" price="@Model.Client.Membership.Price" for="disabledTextInput">Тип абонемента</label>
+                        <input value="@Model.Client.Membership.Category.Name @Model.Client.Membership.Price тг. @Model.Client.Membership.AttendanceDays посещений" type="text" id="disabledTextInput" class="form-control">
+                      
+                    </div>
+                    
+                </fieldset>
+                 
+                <div class="form-group">
+                    <label>Оплата налом</label>
+                    <input id="cashSum" type="number" class="form-control" placeholder="0" value="0">
+                    <p id="invalidCashSum" class="text-danger"></p>
+                </div>
+                <div class="form-group">
+                    <label>Безнал</label>
+                    <input id="cardSum" type="number" class="form-control" placeholder="0" value="0">
+                    <p id="invalidCardSum" class="text-danger"></p>
+                </div>
+                <div class="form-group">
+                    <label>Добавьте комментарий</label>
+                    <input id="commentPayment" type="text" class="form-control">
+                    <p id="invalidComment" class="text-danger"></p>
+                </div>
+                @if (Model.Client.Paid == Paid.Не_оплачено)
+                {
+                    <input id="paymentTypeSelect" type="hidden" value="@PaymentType.Pay" />
+                }
+                else
+                {
+                    <input id="paymentTypeSelect" type="hidden" value="@PaymentType.Surcharge" />
+                }
+            </div>
+           
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Закрыть</button>
+                    <button id="submitPaymentCreate" type="button" class="btn btn-secondary">Добавить</button>
+                </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#submitPaymentCreate').on('click', function () {
+        $.ajax({
+            url: '@Url.Action("CreateAjax", "Payments")',
+            type: "POST",
+            datatype: "json",
+            data: {
+                "Comment": $("#commentPayment").val(),
+                "ClientId": @Model.ClientId,
+                "CardSum": $('#cardSum').val(),
+                "Type": $('#paymentTypeSelect').val(),
+                "CashSum": $('#cashSum').val(),
+                  "BranchId": @Model.BranchId
+            },
+            success: function (data) {
+               if (data === "success") {
+                      alert("Оплата проведена успешно")
+                      $('#paymentCreateModal').modal('hide');
+                      $("#commentPayment").val();
+                      window.location.href = '@Url.Action("Index", "Payments", new {branchId = @Model.BranchId})';
+                      }
+                  else if (data === "negativeOrZero"){
+                      alert("Введенная сумма не может быть 0 или отрицательной")
+                         
+                      }
+                  else{
+                       alert("Ошибка. Попробуйте еще раз");
+                      }    
+                  }
+              
+        })
+    })
+</script>
+

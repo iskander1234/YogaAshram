@@ -1,0 +1,288 @@
+﻿
+@using yogaAshram.Services
+@model System.Collections.Generic.List<yogaAshram.Models.Client>
+
+@{
+    ViewBag.Title = "Список клиентов";
+    Layout = "_Layout";
+}
+
+<h2>Список клиентов</h2>
+<div class="btn-group mb-2">
+	<button type="button" class="btn btn-danger btn-filter" data-target="Долг">Должники</button>
+	<button type="button" class="btn btn-warning btn-filter" data-target="нет">Нет договора</button>
+	<button type="button" class="btn btn-success btn-filter" data-target="не состоит">Не состоит Whatsapp группе</button>
+    <button type="button" class="btn btn-primary btn-filter" data-target="all">Все</button>
+    <input type="text" id="filter" class="form-control w-25 ml-1" placeholder="Группа, имя, тренер">
+</div>
+<table class="table" id="example-table">
+<thead class="thead-dark">
+<tr>
+    <th scope="col"><p class="text-hide">LineToShow</p>Клиент</th>
+    <th scope="col">Группа</th>
+    <th scope="col">Тренер</th>
+    <th scope="col">Статус</th>
+    <th scope="col">Оплата</th>
+    <th scope="col">Whatsapp группа</th>
+    <th scope="col">Договор</th>
+     <th scope="col">Абонемент</th>
+    <th scope="col">Комментарии</th>
+    <th scope="col">Действия</th>
+</tr>
+</thead>
+@foreach (Client client in @Model)
+{
+    <tbody>
+   
+        <tr> 
+        <th scope="row"><a asp-action="ClientСabinet" asp-controller="Clients" asp-route-clientId="@client.Id">@client.NameSurname</a></th>
+        <td>@client.Group.Name</td>
+        <td>@client.Group.Coach.NameSurname</td>
+            <td>@GetEnumDescription.GetDescription(@client.ClientType)</td>
+            <td class="bg-@{string colorDebt = String.Empty;if (@client.Paid == Paid.Есть_долг){ colorDebt = "danger";}@colorDebt}">@GetEnumDescription.GetDescription(@client.Paid)</td>
+        <td class="bg-@{string colorWhat = String.Empty;if (@client.WhatsAppGroup == WhatsAppGroup.Не_состоит_в_группе){ colorWhat = "success";}@colorWhat}">@GetEnumDescription.GetDescription(@client.WhatsAppGroup)</td>
+            <td class="bg-@{string colorCon = String.Empty;if (@client.Contract == Contract.Нет_договора){ colorCon = "warning";}@colorCon}">@GetEnumDescription.GetDescription(@client.Contract)</td>
+            <td>@client.Membership.Name</td>
+            <td>
+            @if (@client.Comments != null)
+            {
+                @foreach (Comment comment in @client.Comments)
+                {
+                    <p class="small">@comment.Text</p>
+                }
+            }
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Действия
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    @if (client.Paid != Paid.Оплачено)
+                    {
+                        <button class="dropdown-item getPaymentCreateModal" clientId="@client.Id">Провести платеж</button>
+                    } 
+                    @if (@client.WhatsAppGroup == WhatsAppGroup.Не_состоит_в_группе)
+                    {
+                        <button class="dropdown-item" data-toggle="modal" data-target="#groupInW-@client.Id">В гр. Whatsapp</button>
+                    }
+                    @if (client.WhatsAppGroup == WhatsAppGroup.Состоит_в_группе)
+                    {
+                        <button class="dropdown-item" data-toggle="modal" data-target="#groupOutW-@client.Id">Выход из гр. Whatsapp</button>
+                    }
+                    @if (@client.Contract == Contract.Нет_договора)
+                    {
+                        <button class="dropdown-item" data-toggle="modal" data-target="#contract-@client.Id">Подписал договор</button>
+                        <a class="dropdown-item" asp-action="GetPdfDocument" asp-controller="Clients" asp-route-clientId="@client.Id">PDF Договор</a>
+                    }
+                    <button class="dropdown-item" data-toggle="modal" data-target="#comment-@client.Id">Оставить комментарий</button>
+                    @if (@client.ClientType == ClientType.AreEngaged)
+                    {
+                      <button class="dropdown-item" data-toggle="modal" data-target="#makeClientUnactive-@client.Id">Сделать неактивным</button>
+                    } 
+                    @if (@client.ClientType == ClientType.NotEngaged)
+                    {
+                        <button class="dropdown-item" data-toggle="modal" data-target="#makeClientActive-@client.Id">Сделать активным</button>
+                    }
+                    <button class="dropdown-item" data-toggle="modal" data-target="#extendMembership-@client.Id">Продлить абонемент</button>
+                  </div>
+                </div>
+            </td>
+    </tr>
+    </tbody>
+    <!-- Modal for WhatsApp -->
+    <div class="modal fade" id="groupInW-@client.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Группа Whatsapp</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="text-center">@client.NameSurname уже состоит в группе Whatsapp?</h5>
+                </div>
+                <div class="modal-footer">
+                    <form method="post" asp-controller="Clients" asp-action="MakeClientJoinInWhatsAppGroup">
+                        <input type="hidden" value="@client.Id" name="clientId">
+                        <button type="submit" class="btn btn-dark">Да</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Еще нет</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="modal fade" id="groupOutW-@client.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Группа Whatsapp</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="text-center">@client.NameSurname вышел из группы Whatsapp?</h5>
+                </div>
+                <div class="modal-footer">
+                    <form method="post" asp-controller="Clients" asp-action="MakeClientJoinInWhatsAppGroup">
+                        <input type="hidden" value="@client.Id" name="clientId">
+                        <button type="submit" class="btn btn-dark">Да</button>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Еще нет</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for contract -->
+    <div class="modal fade" id="contract-@client.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Договор</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                   <h5 class="text-center">@client.NameSurname подписал договор?</h5>
+                </div>
+                <div class="modal-footer">
+                    <form method="post" asp-controller="Clients" asp-action="ClientSignedContract">
+                        <input type="hidden" value="@client.Id" name="clientId">
+                        <button type="submit" class="btn btn-outline-dark">Да</button>
+                    </form>
+                    
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Еще нет</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div> 
+    <!-- Modal for commenting -->
+    <div class="modal fade" id="comment-@client.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Оставить комментарий</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" asp-controller="Clients" asp-action="Comment">
+                        <input type="hidden" value="@client.Id" name="clientId">
+                        <textarea type="text" required name="comment" placeholder="Оставить комментарий" class="form-control mb-1" rows="2"></textarea>
+                        <button type="submit" class="btn btn-outline-dark">Отправить</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal for making unActive -->
+    <div class="modal fade" id="makeClientUnactive-@client.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="text-center">Сделать @client.NameSurname неактивным?</h5>
+                    <p class="text-center"></p>
+                    
+                </div>
+                <div class="modal-footer">
+                   <form method="post" asp-controller="Clients" asp-action="MakeClientUnActive">
+                       <input type="hidden" value="@client.Id" name="clientId">
+                       <button type="submit" class="btn btn-outline-dark">Да</button>
+                       </form>                                       
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Еще нет</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="makeClientActive-@client.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="text-center">Сделать @client.NameSurname активным?</h5>
+                    <p class="text-center"></p>
+                    
+                </div>
+                <div class="modal-footer">
+                    <form method="post" asp-controller="Clients" asp-action="MakeClientUnActive">
+                        <input type="hidden" value="@client.Id" name="clientId">
+                        <button type="submit" class="btn btn-outline-dark">Да</button>
+                    </form>                                       
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Еще нет</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="extendMembership-@client.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="text-center">Вы уверены что хотите продлить абонемент клиента @client.NameSurname?</h5>
+                    <p class="text-center">Если у данного клиента будут отменены занятия (выходные) или использованы заморозки, то могут возникнуть ошибки. 
+                        Продлевайте абонемент только в том случае, если уже известна дата первого занятия</p>
+                    
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-secondary" asp-action="MembershipExtension" asp-controller="Membership" asp-route-clientId="@client.Id">Перейти на страницу продления абонемента</a>                                      
+                    <button type="button" class="btn btn-dark" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+</table>
+								
+@section Scripts
+{
+   @{
+		await Html.RenderPartialAsync("../Payments/PartialViews/GetModalScripts");
+	}
+    <script >
+$(document).ready(function () { 
+    $('.btn-filter').on('click', function () {
+      var $target = $(this).data('target');
+      if ($target != 'all') {
+        $('.table tr').css('display', 'none');
+        $('tr').filter(":contains('" + "LineToShow" + "')").show();
+        $('tr').filter(":contains('" + $target + "')").show();
+      } else {
+        $('.table tr').css('display', 'none').show();
+      }
+    });
+ });	
+$(function() {
+  $("#filter").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#example-table > tbody > tr").filter(function() {      
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+}

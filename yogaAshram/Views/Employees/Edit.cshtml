@@ -1,0 +1,118 @@
+﻿
+@model EditOtherEmployeeModelView
+@{
+    ViewBag.Title = "Редактирование работника";
+}
+<div class="container">
+    <div class="card" style="width:800px;margin:auto;">
+        <div class="card-header text-center">
+            Редактирование пользователя
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" id="editEmployeeForm" method="post" asp-antiforgery="true" style="position:relative;">
+                <div asp-validation-summary="ModelOnly"></div>
+                @if (Model.Role == "coach")
+                {
+                    <div class="form-group">
+                        <label>Имя и фамилия</label>
+                        <input id="nameSurnameInput" class="form-control" asp-for="NameSurname">
+                        <p class="text-danger" id="invalidNameSurname"></p>
+                        <input type="hidden" id="emailInput" class="form-control" asp-for="Email">
+                                                <p class="text-danger" id="invalidEmail"></p>
+                        <input type="hidden" id="userNameInput" class="form-control" asp-for="UserName">
+                                                 <p class="text-danger" id="invalidUserName"></p>
+                        
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label>Электронная почта</label>
+                        <input id="emailInput" class="form-control" asp-for="Email">
+                        <p class="text-danger" id="invalidEmail"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Логин</label>
+                        <input id="userNameInput" class="form-control" asp-for="UserName">
+                        <p class="text-danger" id="invalidUserName"></p>
+                    </div>
+                    <div class="form-group">
+                        <label>Имя и фамилия</label>
+                        <input id="nameSurnameInput" class="form-control" asp-for="NameSurname">
+                        <p class="text-danger" id="invalidNameSurname"></p>
+                    </div>
+                }
+                <div class="form-group">
+                    <label>Роль</label>
+                    <input readonly="readonly" asp-for="Role" value="@Model.Role" class="form-control">
+                </div>
+                <input id="employeeId" type="hidden" asp-for="Id" value="@Model.Id" />
+                <button type="button" id="submitButton" class="btn btn-secondary mt-3">Сохранить изменения</button>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts
+    {
+    <script>
+        var id = $('#employeeId').val();
+        function checkRequired(text) {
+            if (text.length == 0) {
+                return false;
+            }
+            return true;
+        };
+
+        $('#submitButton').on('click', function () {
+            var truth = true;
+            if(!checkRequired($('#emailInput').val())){
+                $('#invalidEmail').html('Это поле обязательно для заполнения');
+                truth = false;
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("CheckEditEmplEmail", "Validation")',
+                    data: { 'email': $('#emailInput').val(), 'emplId': id },
+                    success: function (data) {
+                        if (!data) {
+                            truth = false;
+                            $('#invalidEmail').html('Такая почта уже существует')
+                        }
+                        else {
+                            $('#invalidEmail').html('');
+                            if(!checkRequired($('#userNameInput').val())){
+                $('#invalidUserName').html('Это поле обязательно для заполнения');
+                truth = false;
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("CheckEditEmplUserName", "Validation")',
+                    data: { 'userName': $('#userNameInput').val(), 'emplId': id },
+                    success: function (data) {
+                        if (!data) {
+                            truth = false;
+                            $('#invalidUserName').html('Такой логин уже существует')
+                        }
+                        else {
+                            $('#invalidUserName').html('');
+                            if (!checkRequired($('#nameSurnameInput').val())) {
+                $('#invalidNameSurname').html('Это поле обязательно для заполнения');
+                truth = false;
+            }
+            else {
+                                $('#invalidNameSurname').html('');
+                                $('#editEmployeeForm').submit();
+            }
+                        }
+                    }
+                });
+            }
+                        }
+                    }
+                });
+            }
+
+
+        });
+    </script>
+}

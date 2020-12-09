@@ -1,0 +1,28 @@
+﻿
+<div id="modal-place"></div>
+<script>
+    function checkRequired(text) {
+            if (text.length == 0) {
+                return false;
+            }
+            return true;
+        };
+</script>
+<script>
+    var getModalBtns = $(".getModal");
+    for (var i = 0; i < getModalBtns.length; i++) {
+        let btn = getModalBtns[i];
+        $(btn).on('click', function () {
+            let modalId = $(btn).attr('data-target');
+            if (document.getElementById(modalId)) {
+                $('#' + modalId).modal('show');
+            }
+            else {
+                $.get($(btn).attr('id'), function (data) {
+                        $("#modal-place").html(data);
+                        $(document.getElementById(modalId)).modal('show');
+            })
+            }
+        })
+    }
+</script>

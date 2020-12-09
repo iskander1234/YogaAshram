@@ -1,0 +1,100 @@
+﻿@using System.Collections
+@model Employee
+
+@{
+    ViewBag.Title = "Список сотрудников";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h2 class="text-center">Список сотрудников</h2>
+   <button class="btn btn-secondary  getModal mb-1" data-target="emplCreateModal" id="@Url.Action("GetCreateEmplModalAjax", "Employees")" type="button">Добавить работника</button>
+    <table class="table table-striped mt-5">
+        <thead>
+        <tr>
+            <th scope="col">ФИО</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Логин</th>
+            <th scope="col">Роль</th>
+            <th scope="col">Филиал</th>
+            <th scope="col">Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var employee in ViewBag.Employees)
+        {
+            @if (@employee.Employee.Role == "coach")
+            {
+                <tr>
+                    <td>@employee.Employee.NameSurname</td>
+                    <td>Нет</td>
+                    <td>Нет</td>
+                    <td>Инструктор</td>
+                    <td>
+                        
+                    </td>
+                    <td>
+                        <a asp-action="Delete" asp-controller="Employees" asp-route-emplId="@employee.Employee.Id">Удалить</a>
+                        <a asp-action="Edit" asp-controller="Employees" asp-route-emplId="@employee.Employee.Id">Изменить</a>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>@employee.Employee.NameSurname</td>
+                    <td>@employee.Employee.Email</td>
+                    <td>@employee.Employee.UserName</td>
+                    <td>
+                        @if (@employee.Employee.Role == "admin")
+                        {
+                            <p>Администратор</p>
+                        }
+                        else if (@employee.Employee.Role == "manager")
+                        {
+                            <p>Старший менеджнер</p>
+                        }
+                        else if (@employee.Employee.Role == "chief")
+                        {
+                            <p>Директор</p>
+                        }
+                        else if (@employee.Employee.Role == "marketer")
+                        {
+                            <p>Маркетолог</p>
+                        }
+                        else if (@employee.Employee.Role == "seller")
+                        {
+                            <p>Менеджер по продажам</p>
+                        }
+                    </td>
+
+                    <td>
+                        @if (@employee.Employee.Role == "admin")
+                        {
+                            @if (@employee.Branch != null)
+                            {
+                                <p>@employee.Branch.Name</p>
+                            }
+                            else
+                            {
+                                <p>Нет центра</p>
+                            }
+                        }
+                    </td>
+
+                    <td>
+                        @if (@employee.Employee.Role == "chief"){
+                            <a asp-action="Edit" asp-controller="Employees" asp-route-emplId="@employee.Employee.Id">Изменить</a>
+                        }
+                        else
+                        {
+                            <a asp-action="Delete" asp-controller="Employees" asp-route-emplId="@employee.Employee.Id">Удалить</a>
+                            <a asp-action="Edit" asp-controller="Employees" asp-route-emplId="@employee.Employee.Id">Изменить</a>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,191 @@
+﻿
+@using System.Collections
+@using yogaAshram.Services
+@model Client
+
+@{
+    ViewBag.Title = "Клиент";
+    Layout = "_Layout";
+}
+
+<h2 style="text-align: center; margin-bottom: 20px">Клиент</h2>
+
+
+<div class="container">
+    <div class="card">
+        <div class="row">
+
+            <p class="col-md-3 ml-5 mt-4"><b>Имя фамилия</b> - @Model.NameSurname</p>
+            <p class="col-md-3 ml-5 mt-4"><b>Почта</b> - @Model.Email</p>
+            <p class="col-md-3 ml-5 mt-4"><b>Номер телефона</b> - @Model.PhoneNumber</p>
+            <p class="col-md-3 ml-5 mt-4"><b>Дата рождение</b> - @Model.DateOfBirth.ToString("dd.MM.yyyy")</p>
+            <p class="col-md-3 ml-5 mt-4"><b>Должность работа</b> - @Model.WorkPlace</p>
+            <p class="col-md-3 ml-5 mt-4"><b>Наличие заболеваний</b> - @Model.Sickness.Name</p>
+            <p class="col-md-3 ml-5 mt-4"><b>Филиал</b> - @Model.Group.Branch.Name</p>
+            <p class="col-md-3 ml-5 mt-4"><b>Группа</b> - @Model.Group.Name</p>
+            <p class="col-md-3 ml-5 mt-4"><b>Узнали нас</b> - @Model.Source</p>
+            <p class="col-md-3 ml-5 mt-4"><b>Абонемент</b> - @Model.Membership.Name</p>
+            <p class="col-md-3 ml-5 mt-4">
+                <b>Осталось посещений</b> - @ViewBag.AbsenceCount.AttendingTimes
+            </p>
+            <p class="col-md-3 ml-5 mt-4">
+                <b>Пропуски</b> - @ViewBag.AbsenceCount.AbsenceTimes
+            </p>
+            <p class="col-md-3 ml-5 mt-4">
+                <b>Осталось заморозок</b> - @ViewBag.AbsenceCount.FrozenTimes
+            </p>
+            <p class="col-md-3 ml-5 mt-4">
+                <b>Договор</b> - @GetEnumDescription.GetDescription(@Model.Contract)
+            </p>
+            <p class="col-md-3 ml-5 mt-4">
+                <b>WhatsApp</b> - @GetEnumDescription.GetDescription(@Model.WhatsAppGroup)
+            </p>
+            <p class="col-md-3 ml-5 mt-4">
+                <b>Оплата</b> - @GetEnumDescription.GetDescription(@Model.Paid)
+            </p>
+
+
+            <button type="submit" class="col-md-3 ml-5 mt-4 btn-1 btn btn-outline-dark" id="btn_modal_window" style="margin-bottom: 30px">Редактировать</button>
+            @if (User.IsInRole("chief") || User.IsInRole("manager"))
+            {
+                <button class="col-md-3 ml-5 mt-4 btn-1 btn btn-outline-dark" data-toggle="modal" data-target="#deleteClient" style="margin-bottom: 30px">Удалить</button>
+            }
+             
+        </div>
+        <div class="m-2">
+        @if (Model.Balance < 0)
+        {
+            <p class="text-center">Присутствует задолженность в размере <strong>@(-Model.Balance) тг.</strong></p>
+        }
+        else if (Model.Balance > 0)
+        {
+            <p class="text-center">Имеется переплата в размере <strong>@Model.Balance тг.</strong></p>
+        }
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="mymodal" style="display: none;
+                                           position: fixed;
+                                           z-index: 1000;
+                                           left: 0;
+                                           top: 0;
+                                           width: 100%;
+                                           height: 100%;
+                                           background: rgba(0, 0, 0, 0.6);
+                                           overflow: auto;">
+    <div class="modal_content" style="background-color: #ffffff;
+                                          padding: 20px;
+                                          width: 35%;
+                                          z-index: 99999;
+                                          margin: auto;
+                                          margin-top: 40px;
+                                          margin-bottom: 30px;">
+        <h2 style="text-align: center">Редактировать клиента</h2>
+        <div class="form-group" id="table">
+            <form class="was-validated" asp-action="ClientEdit" method="post">
+                <div class="form-group">
+                    <label asp-for="@Model.ClientsEditModelView.NameSurname">ФИО</label>
+                    <input class="form-control" asp-for="NameSurname">
+                    <span asp-validation-for="@Model.ClientsEditModelView.NameSurname"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.ClientsEditModelView.Email">Email</label>
+                    <input class="form-control" asp-for="Email" type="email">
+                    <span asp-validation-for="@Model.ClientsEditModelView.Email"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.ClientsEditModelView.PhoneNumber">Номер телофона</label>
+                    <input class="form-control" asp-for="PhoneNumber" type="text">
+                    <span asp-validation-for="@Model.ClientsEditModelView.PhoneNumber"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.ClientsEditModelView.DateOfBirth">Дата рождение</label>
+                    <input class="form-control" asp-for="@Model.DateOfBirth" type="date">
+                    <span asp-validation-for="@Model.ClientsEditModelView.DateOfBirth"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.ClientsEditModelView.WorkPlace">Должность работа</label>
+                    <textarea class="form-control" asp-for="@Model.WorkPlace" type="text"></textarea>
+                    <span asp-validation-for="@Model.ClientsEditModelView.WorkPlace"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.ClientsEditModelView.Sickness">Наличие заболеваний</label>
+                    <select class="form-control mb-4" asp-for="@Model.SicknessId">
+                        @foreach (Sickness sickness in  @ViewBag.Sicknesses)
+                        {
+                            <option value="@sickness.Id">
+                                @sickness.Name
+                            </option>
+                        }
+                    </select>
+                    <span asp-validation-for="@Model.ClientsEditModelView.Sickness"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.ClientsEditModelView.Source">Откуда вы о нас узнали?</label><br/>
+                    <select class="form-control mb-4" asp-for="@Model.Source">
+                        <option >...</option>
+                        <option value="Инстаграм страница">Инстаграм страница</option>
+                        <option value="Таргет в инстаграмме">Таргет в инстаграмме</option>
+                        <option value="Инстаграм страница">Инстаграм страница</option>
+                        <option value="Вывеска">Вывеска</option>
+                        <option value="По рекомендации">По рекомендации</option>
+                        <option value="По брошюре">По брошюре</option>
+                        <option value="2ГИС">2ГИС</option>
+                        <option value="1Fit">1Fit</option>
+                        <option value="Гугл реклама">Гугл реклама</option>
+                        <option value="Яндекс реклама">Яндекс реклама </option>
+                        <option value="Другое">Другое</option>
+                    </select>
+                    <span asp-validation-for="@Model.ClientsEditModelView.Source"></span>
+                </div>
+                <input type="hidden" asp-for="Id" value="@Model.Id">
+                <input style="margin-left: 180px;" type="submit" value="Сохранить" class="btn btn-outline-dark">
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteClient" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <h3 class="text-center">Удалить @Model.NameSurname?</h3>
+      </div>
+        <div class="modal-footer">
+            <form asp-action="DeleteClient" method="post">
+                <input type="hidden" value="@Model.Id" name="clientId">
+                <button type="submit" class="btn btn-primary">Да</button>
+            </form>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Нет</button>
+
+        </div>
+    </div>
+  </div>
+</div>
+@section Scripts{
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        var modal = document.getElementById("mymodal");
+        var btn = document.getElementById("btn_modal_window");
+
+        btn.onclick = function(){
+            modal.style.display = "block";
+        };
+
+        window.onclick = function(event){
+            if(event.target == modal){
+                modal.style.display = "none";
+            }
+        };
+    </script>
+}

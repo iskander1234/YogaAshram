@@ -1,0 +1,33 @@
+﻿
+@inject UserManager<Employee> UserManager
+@using Microsoft.AspNetCore.Identity
+@model ManagerIndexModelView
+@{
+    ViewBag.Title = "Личный кабинет менеджера";
+    Layout = "_Layout";
+}
+<div class="container">
+
+   
+
+    <h2 class="ml-4 mb-3">Старший менеджер</h2>
+
+    
+   
+</div>
+@section Scripts
+{
+    <script>
+            $('#showIndex').click(function() {
+                $('#showIndex').css('display', 'none');
+                $('#dataIndex').show();
+                $('#hideIndex').show();
+            });
+                   
+            $('#hideIndex').click(function() {
+                $('#hideIndex').css('display', 'none');
+                $('#dataIndex').hide();
+                $('#showIndex').show();
+            });
+    </script>
+}

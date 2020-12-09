@@ -1,0 +1,77 @@
+﻿
+@using System.Net
+@using yogaAshram.Services
+@using State = yogaAshram.Models.State
+@model System.Collections.Generic.List<yogaAshram.Models.TrialUsers>
+
+@{
+    ViewBag.Title = "Пробники";
+    Layout = "_Layout";
+}
+
+<h4 class="text-center">Пробники  @if(@Model.Count>0){  @Model[0].Group.Branch.Name } </h4>
+<form method="get">
+    <div class="form-inline form-group">
+        <label class="control-label">Дата: </label>
+        <input type="date" id="start"  name="time">
+      
+        <input name="branchId"  type="hidden" value="@ViewBag.BranchId" /> 
+        
+        <input type="submit" value="Фильтр" class="btn btn-secondary" />
+    </div>
+</form>
+<table class="table " id="customers">
+    <tr>
+        <th>Клиент</th>
+        <th>Группа</th>
+        <th>Дата урока</th>
+        <th>Посещение</th>
+          <th>Cтатус</th>
+     
+         @if (User.IsInRole("admin") ||User.IsInRole("chief")||User.IsInRole("manager") )
+         {
+             <th>Отметить</th>
+         }
+         <th>Коментарии</th>
+       
+        
+    </tr>
+    @foreach (var client in @Model)
+    { <tr>
+          <td><a asp-action="ClientInfo" asp-controller="Clients" asp-route-Id="@client.ClientId">@client.Client.NameSurname</a></td>
+          <td>@client.Group.Name</td>
+          <td>@client.LessonTime.ToShortDateString()</td>
+           <td style="background: @client.GetColorTrial()">@client.GetValueOfState()</td>
+          <td style="background: @client.Client.GetColorOfState()">@GetEnumDescription.GetDescription(@client.Client.ClientType)</td>
+          
+          @if (User.IsInRole("admin")||User.IsInRole("chief") || User.IsInRole("manager"))
+          {
+              @if(@client.IsChecked==false || @client.State==State.willAttend)
+              {<td>
+                   <a asp-action="CheckAttendanceTrial" asp-route-groupId="@client.GroupId" asp-route-clientId="@client.Id" asp-route-branchId="@client.Group.Branch.Id">Отметить</a>
+               </td>
+              }
+              else
+              {
+                  <td>Отмечено</td>
+              }
+          }
+        
+          <td>
+
+              @if (@client.SellerComments != null)
+              {
+                  @foreach (var comment in @client.SellerComments)
+                  {
+                      <p class="small">@comment.Text</p>
+                  }
+              }
+                    
+          </td>
+      </tr>
+        
+    }
+</table>
+
+
+

@@ -1,0 +1,54 @@
+﻿
+
+@model IEnumerable<Membership>
+
+<h1 class="text-center"> Список абонементов</h1>
+
+
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th>
+              Название
+            </th>
+            <th>
+               Количество дней
+            </th>
+            <th>
+               Цена
+            </th>
+            <th>
+               Категория
+            </th>
+            <th>
+                @if (User.IsInRole("chief"))
+                {<a onclick="showInPopup('@Url.Action("AddOrEdit", "Membership", new {id = 0}, Context.Request.Scheme)','Добавить абонемент')" class="btn btn-success text-white"> Добавить</a>}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AttendanceDays)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td>
+                    <div>
+                        @if (User.IsInRole("chief"))
+                        {<a onclick="showInPopup('@Url.Action("AddOrEdit", "Membership", new {id = item.Id}, Context.Request.Scheme)','Редактировать ')" class="btn btn-info text-white"> Редактировать</a>}
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

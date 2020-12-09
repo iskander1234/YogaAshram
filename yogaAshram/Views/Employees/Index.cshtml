@@ -1,0 +1,19 @@
+﻿
+@inject UserManager<Employee> UserManager
+@using Microsoft.AspNetCore.Identity
+@model Employee
+@{
+    ViewBag.Title = "Главна страница";
+    Layout = "_Layout";
+}
+
+<h2>Добро пожаловать на главную страницу</h2>
+
+@if (User.IsInRole("chief"))
+{
+    <a asp-action="Index" asp-controller="Chief" class="btn btn-primary">Личный кабинет</a>
+}
+else if (User.IsInRole("manager"))
+{
+    <a asp-action="Index" asp-controller="Manager" class="btn btn-dark">Личный кабинет</a>
+}
