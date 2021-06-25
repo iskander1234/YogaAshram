@@ -19,16 +19,16 @@
                 <button class="dropdown-item  getModal" data-target="emplCreateModal" id="@Url.Action("GetCreateEmplModalAjax", "Employees")" type="button">Добавить работника</button>
                 <a class="dropdown-item" asp-action="ListEmployee" asp-controller="Employees">Список сотрудников</a>
                 <a class="dropdown-item" asp-action="Index" asp-controller="Coaches">
-                    Список тренеров
+                    Список сотрудников в входе 
                 </a>
             </div>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" type="button" data-toggle="modal" data-target="#addBranch" onclick="validateAdminIds()">Добавить центр</a>
+            <a class="nav-link" type="button" data-toggle="modal" data-target="#addBranch" onclick="validateAdminIds()">Добавить филиал</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link " asp-action="CreateGroup" asp-controller="Group">Создать группу</a>
+            <a class="nav-link " asp-action="CreateGroup" asp-controller="Group">Создать зал</a>
         </li>
 
         <li class="nav-item dropdown">

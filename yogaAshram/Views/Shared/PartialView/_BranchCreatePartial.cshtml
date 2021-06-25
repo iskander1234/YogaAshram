@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Добавить центр йоги</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">Добавить новый филиал</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -11,7 +11,7 @@
                <form asp-action="CreateBranch" asp-controller="Branch">
                                    
                    <input name="name" type="text" class="form-control mb-2" placeholder="Название" required>
-                   <input name="info" type="text" class="form-control mb-2" placeholder="Информация о центре">
+                   <input name="info" type="text" class="form-control mb-2" placeholder="Информация о филале">
                    <input name="address" type="text" class="form-control mb-2" placeholder="Адрес">
                    @if (@ViewBag.Admin.Count == 0)
                    {

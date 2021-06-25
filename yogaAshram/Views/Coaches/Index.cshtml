@@ -7,14 +7,14 @@
 }
 <div class="card">
     <div class="card-header">
-        <h5 class="text-center pb-2 border-bottom card-title mb-2">Список тренеров</h5>
+        <h5 class="text-center pb-2 border-bottom card-title mb-2">Список сотрудника</h5>
         
         <form asp-action="Index">
-            <h5 class="card-title mb-2 text-center">Фильтровать тренеров</h5>
+            <h5 class="card-title mb-2 text-center">Фильтровать сотрудника в входе</h5>
             <div style="margin:auto; width: 740px;">
                 <div class="form-row ">
                     <div class="form-group col-md-5 mr-2">
-                        <input placeholder="Фильтровка тренеров" type="text" class="form-control" asp-for="CoachName">
+                        <input placeholder="Фильтровка сотрудников" type="text" class="form-control" asp-for="CoachName">
                     </div>
                     <div class="form-group col-md-5">
                         <select asp-for="BranchId" class="form-control">
@@ -37,7 +37,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Имя тренера</th>
+                    <th scope="col">Имя сотрудника</th>
                     
                     <th scope="col">Группы</th>
                     <th scope="col"></th>
@@ -58,7 +58,7 @@
                             @foreach (var group in item.Groups)
                             {
                                 <span>
-                                    @group.Name, центр @group.Branch.Name
+                                    @group.Name, филиал @group.Branch.Name
                                 </span><br>
                             }
                         </td>

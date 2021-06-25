@@ -24,7 +24,7 @@
                                 <select asp-for="GroupId" class="form-control">
                                     @foreach (Group group in Model.Groups)
                                     {
-                                        <option value="@group.Id">@group.Name, центр @group.Branch.Name</option>
+                                        <option value="@group.Id">@group.Name, филиал @group.Branch.Name</option>
                                     }
                                 </select>
                             </label>

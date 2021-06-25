@@ -23,10 +23,10 @@
     <div class="card-header">
     </div>
     <div class="card-body">
-        <h5 class="card-title">Все центры</h5>
+        <h5 class="card-title">Все филиалы</h5>
         @if (Enumerable.Count(ViewBag.Branches) == 0)
         {
-            <p class="text-center">Список центров пуст</p>
+            <p class="text-center">Список филиалов пуст</p>
         }
         else
         {
@@ -35,7 +35,7 @@
                 <p>
                     <hr>
                    
-                    Центр йоги : <b id="centerReload-@branch.Id">@branch.Name</b> <br>
+                    Филиал  : <b id="centerReload-@branch.Id">@branch.Name</b> <br>
                    
                     <a class="btn btn-sm btn-outline-secondary mt-2" type="button" href="#" id="branchButton-@branch.Id" onclick="openBranch('@branch.Id')"> Открыть</a>
                    <a class="btn btn-sm btn-outline-secondary mt-2" type="button" href="#" data-toggle="modal" data-target="#deleteBranch-@branch.Id">Удалить</a> 
@@ -44,7 +44,7 @@
                     <div id="messageReload-@branch.Id">
                     @if (branch.Admin.UserName == "na")
                     {
-                        <p class="text-danger">Необходимо добавить администратора! Для этого откройте центр и выберите администратора из выпадающего списка.</p>
+                        <p class="text-danger">Необходимо добавить администратора! Для этого откройте филиала и выберите администратора из выпадающего списка.</p>
                     }
                     </div>
                     <hr>
@@ -111,7 +111,7 @@
 
                     <div id="infoReload-@branch.Id">
                         <p>
-                            Информация о центре: <span id="infoValue-@branch.Id"> @branch.Info</span>
+                            Информация о филиале: <span id="infoValue-@branch.Id"> @branch.Info</span>
                             <a href="#" onclick="openInfo('@branch.Id');return false;" title="Редактировать">
                                 <img src="/Images/SiteImages/edit.png" class="editIcon" alt="edit">
                             </a>

@@ -18,7 +18,7 @@
                 <select class="form-control mb-4" asp-for="GroupId">
                     @if (Enumerable.Count(@ViewBag.Groups) == 0)
                     {
-                        <p>Не найдено ни одной группы</p>
+                        <p>Не найдено ни одной зале</p>
                     }
                     else
                     {
@@ -41,8 +41,8 @@
                             <label>
                               Количество занятии
                               <select asp-for="LessonNumbers">
-                                  <option value="1">1 пробное занятие</option>
-                                  <option value="3">3 пробных занятии</option>
+                                  <option value="1">1 пробное посещения</option>
+                                  <option value="3">3 пробных посещения</option>
                               </select>
                             </label>
                         </div>

@@ -17,6 +17,8 @@ namespace yogaAshram.Controllers
     [Authorize(Roles = "chief")]
     public class ChiefController : Controller
     {
+        
+        
         private readonly UserManager<Employee> _userManager;
         private readonly SignInManager<Employee> _signInManager;
         private readonly YogaAshramContext _db;

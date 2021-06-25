@@ -9,7 +9,7 @@
 
 <div class="row d-flex justify-content-center">
     <div class="col-md-6">
-        <h2>Добавить новую группу</h2>
+        <h2>Добавить новый зал</h2>
         <form method="post" asp-controller="Group" asp-action="CreateGroup">
             <label>Филиал</label>
             <select class="form-control mb-4" asp-for="BranchId">
@@ -27,16 +27,16 @@
             </select>
             <div>
                 <span asp-validation-for="Name"></span>
-                <label >Название группы</label><br/>
+                <label >Название зала</label><br/>
                 <input class="form-control mb-4" asp-for="Name"/>
             </div>
             <div>
                 <span asp-validation-for="CoachId"></span>
-                <label> Тренер</label><br/>
+                <label> Сотрудник при входе</label><br/>
                  <select class="form-control mb-4" asp-for="CoachId">
                                 @if (Enumerable.Count(@ViewBag.Coaches) == 0)
                                 {
-                                    <p>Не найдено ни одного тренера</p>
+                                    <p>Не найдено ни одного сотрудника для входа</p>
                                 }
                                 else
                                 {
